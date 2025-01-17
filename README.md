@@ -2,7 +2,7 @@
 ## Branch atual `William`
 
 - [X] Header
-- [ ] Footer
+- [X] Footer
 - [ ] Modelo dos cards de vagas
 
 - [ ] Separar css do html
