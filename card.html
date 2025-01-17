@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Expandable Cards</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            background-color: #f4f4f9;
+            height: 100vh;
+        }
+
+        .card-container {
+            width: 100%;
+            max-width: 600px;
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+            padding: 10px;
+            box-sizing: border-box;
+            margin-top: 20px;
+        }
+
+        .card {
+            background-color: #fff;
+            border: 1px solid #ccc;
+            border-radius: 8px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+            overflow: hidden;
+            transition: max-height 0.3s ease;
+        }
+
+        .card.minimized {
+            max-height: 150px;
+        }
+
+        .card.expanded {
+            max-height: 1000px; /* Valor alto para garantir que a altura máxima seja suficiente para exibir todo o conteúdo */
+        }
+
+        .card-header {
+            padding: 16px 16px 0 16px;
+            display: flex;
+            flex-direction: column;
+            background-color: #f8f9fa;
+            cursor: pointer;
+        }
+
+        .card-header-top {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            width: 100%;
+        }
+
+        .card-header h3 {
+            margin: 8px 0;
+            font-size: 18px;
+            font-weight: bold;
+        }
+
+        .company-info {
+            display: flex;
+            align-items: center;
+        }
+
+        .company-info img {
+            width: 24px;
+            height: 24px;
+            margin-right: 8px;
+        }
+
+        .status {
+            background-color: green;
+            color: white;
+            padding: 4px 8px;
+            border-radius: 4px;
+            opacity: 0.8;
+        }
+
+        .status.inactive {
+            background-color: red;
+        }
+
+        .card-body {
+            padding: 0 16px 16px 16px;
+            display: none;
+        }
+
+        .card.expanded .card-body {
+            display: block;
+        }
+
+        .button-container {
+            display: flex;
+            justify-content: flex-end;
+            padding: 0 16px 16px 16px;
+        }
+
+        .button {
+            background-color: #007bff;
+            color: #fff;
+            border: none;
+            border-radius: 4px;
+            padding: 8px 12px;
+            cursor: pointer;
+            transition: background-color 0.2s ease;
+        }
+
+        .button:hover {
+            background-color: #0056b3;
+        }
+    </style>
+</head>
+<body>
+    <div class="card-container">
+        <div class="card minimized" id="card1">
+            <div class="card-header" onclick="toggleCard('card1')">
+                <div class="card-header-top">
+                    <div class="company-info">
+                        <img src="img/profile-bl.png" alt="Company Icon">
+                        <span>Nome da Empresa</span>
+                    </div>
+                    <span class="status">Ativo</span>
+                </div>
+                <h3>Título da Vaga</h3>
+            </div>
+            <div class="card-body">
+                <p>Responsabilidades:</p>
+                <ul>
+                    <li>Auxiliar na criação de conteúdo para redes sociais e blog.</li>
+                    <li>Monitorar e analisar métricas de desempenho das campanhas.</li>
+                    <li>Apoiar na gestão de campanhas de e-mail marketing.</li>
+                    <li>Colaborar com a equipe na elaboração de estratégias de SEO.</li>
+                </ul>
+                <p>Local: Eunápolis-BA</p>
+            </div>
+            <div class="button-container">
+                <button class="button" onclick="toggleCard('card1')">Ver Mais</button>
+            </div>
+        </div>
+
+        <div class="card minimized" id="card2">
+            <div class="card-header" onclick="toggleCard('card2')">
+                <div class="card-header-top">
+                    <div class="company-info">
+                        <img src="img/profile-bl.png" alt="Company Icon">
+                        <span>Nome da Empresa</span>
+                    </div>
+                    <span class="status inactive">Inativo</span>
+                </div>
+                <h3>Título da Vaga</h3>
+            </div>
+            <div class="card-body">
+                <p>Responsabilidades:</p>
+                <ul>
+                    <li>Auxiliar na criação de conteúdo para redes sociais e blog.</li>
+                    <li>Monitorar e analisar métricas de desempenho das campanhas.</li>
+                    <li>Apoiar na gestão de campanhas de e-mail marketing.</li>
+                    <li>Colaborar com a equipe na elaboração de estratégias de SEO.</li>
+                </ul>
+                <p>Local: Eunápolis-BA</p>
+            </div>
+            <div class="button-container">
+                <button class="button" onclick="toggleCard('card2')">Ver Mais</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function toggleCard(cardId) {
+            const card = document.getElementById(cardId);
+            if (card.classList.contains('minimized')) {
+                card.classList.remove('minimized');
+                card.classList.add('expanded');
+            } else {
+                card.classList.remove('expanded');
+                card.classList.add('minimized');
+            }
+        }
+    </script>
+</body>
+</html>

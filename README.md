@@ -6,5 +6,6 @@
 - [ ] Modelo dos cards de vagas
 
 - [ ] Separar css do html
+- [ ] Separar js do html
 - [ ] Adaptar para React (?)
 
