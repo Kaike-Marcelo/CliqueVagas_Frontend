@@ -4,6 +4,7 @@
     padding: 0;
     display: flex;
     justify-content: center;
+    align-items: center; /* Center items vertically */
     background-color: #f4f4f9;
     height: 100vh;
 }
@@ -16,7 +17,7 @@
     gap: 20px;
     padding: 10px;
     box-sizing: border-box;
-    margin-top: 20px;
+    margin: auto; /* Center container horizontally */
 }
 
 .card {
