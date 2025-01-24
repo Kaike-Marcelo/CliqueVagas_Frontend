@@ -21,7 +21,7 @@ const JobCard: React.FC<JobCardProps> = ({ id, company, status, title, responsib
 
     return (
         <div className={`${styles.card} ${isExpanded ? styles.expanded : styles.minimized}`} id={id}>
-            <div className={styles['card-header']} onClick={toggleCard}>
+            <div className={styles['card-header']}>
                 <div className={styles['card-header-top']}>
                     <div className={styles['company-info']}>
                         <img src="/img/profile-bl.png" alt="Company Icon" />
