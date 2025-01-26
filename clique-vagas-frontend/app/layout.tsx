@@ -22,49 +22,51 @@ export default function RootLayout({
   return (
     <html lang="pt-BR" suppressHydrationWarning>
       <body className={inter.className} suppressHydrationWarning>
-        <header className="flex justify-between items-center p-1 px-6 bg-gray-800 text-white">
-          <div className="flex items-center space-x-4">
-            <img src="img/logo.png" width={50} height={50} />
-            <div className="flex items-center space-x-2">
-              <SearchIcon />
-              <Input
-                type="text"
-                placeholder="Pesquisar..."
-                className="p-2 rounded bg-gray-700 text-white"
-              />
+        <header className="flex justify-between items-center p-1 px-6 bg-sky-950 text-white">
+          <div className="max-w-6xl mx-auto flex justify-between w-full">
+            <div className="flex items-center space-x-4">
+              <img src="img/logo.png" width={40} height={40} />
+              <div className="flex items-center space-x-2">
+                <SearchIcon />
+                <Input
+                  type="text"
+                  placeholder="Pesquisar..."
+                  className="p-2 rounded bg-gray-700 text-white"
+                />
+              </div>
             </div>
-          </div>
-          <div className="flex items-center space-x-4">
-            <Button
-              variant="ghost"
-              className="flex flex-col items-center space-x-2 size-14"
-              asChild
-            >
-              <Link href="/">
-                <HomeIcon size={24} />
-                Início
-              </Link>
-            </Button>
-            <Button
-              variant="ghost"
-              className="flex flex-col items-center space-x-2 size-14"
-              asChild
-            >
-              <Link href="/vagas">
-                <BriefcaseIcon size={24} />
-                Vagas
-              </Link>
-            </Button>
-            <Button
-              variant="ghost"
-              className="flex flex-col items-center space-x-2 size-14"
-              asChild
-            >
-              <Link href="/perfil">
-                <UserIcon size={24} />
-                Perfil
-              </Link>
-            </Button>
+            <div className="flex items-center space-x-4">
+              <Button
+                variant="ghost"
+                className="flex flex-col items-center space-x-2 size-14"
+                asChild
+              >
+                <Link href="/">
+                  <HomeIcon size={24} />
+                  Início
+                </Link>
+              </Button>
+              <Button
+                variant="ghost"
+                className="flex flex-col items-center space-x-2 size-14"
+                asChild
+              >
+                <Link href="/vagas">
+                  <BriefcaseIcon size={24} />
+                  Vagas
+                </Link>
+              </Button>
+              <Button
+                variant="ghost"
+                className="flex flex-col items-center space-x-2 size-14"
+                asChild
+              >
+                <Link href="/perfil">
+                  <UserIcon size={24} />
+                  Perfil
+                </Link>
+              </Button>
+            </div>
           </div>
         </header>
         {children}
