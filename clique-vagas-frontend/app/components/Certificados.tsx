@@ -14,6 +14,7 @@ import {
   AlertDialogTitle,
   AlertDialogTrigger,
 } from './ui/alert-dialog';
+import { CertificateForm } from './CertificadoForm';
 
 interface Certificado {
   title: string;
@@ -43,6 +44,8 @@ const Certificados: React.FC<CertificadosProps> = ({ certificados }) => {
       image:
         'https://images.unsplash.com/photo-1523287562758-66c7fc58967f?w=500&auto=format&fit=crop&q=60&ixlib=rb-4.0.3',
     });
+    setIsDialogOpen(false);
+    setTimeout(() => setIsDialogOpen(true), 0);
   }
 
   return (
@@ -126,16 +129,7 @@ const Certificados: React.FC<CertificadosProps> = ({ certificados }) => {
             </div>
           </div>
           <div className="mt-4 flex justify-center">
-            <Button
-              onClick={() => {
-                handleAddCertificado();
-                setIsDialogOpen(false);
-                setTimeout(() => setIsDialogOpen(true), 0);
-              }}
-              className="px-4 py-2 rounded"
-            >
-              Adicionar Certificado +
-            </Button>
+            <CertificateForm onSubmit={handleAddCertificado} />
           </div>
         </DialogContent>
       </Dialog>
