@@ -2,7 +2,7 @@ import { Separator } from './ui/separator';
 
 const UserInfo = () => {
   return (
-    <>
+    <div className="max-h-[440px] overflow-y-auto">
       <div className="mb-8">
         <h2 className="text-2xl font-bold mb-6">Informações Pessoais</h2>
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -94,7 +94,7 @@ const UserInfo = () => {
           </div>
         </div>
       </div>
-    </>
+    </div>
   );
 };
 
