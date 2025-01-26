@@ -1,16 +1,18 @@
 'use client';
 
+import { useState } from 'react';
 import { Download, Edit, PlusCircle } from 'lucide-react';
 import { Card, CardContent } from '../components/ui/card';
 import { Avatar, AvatarFallback, AvatarImage } from '../components/ui/avatar';
 import { Button } from '../components/ui/button';
 import { Separator } from '../components/ui/separator';
-import { Badge } from '../components/ui/badge';
 import Certificados from '../components/Certificados';
 import UserInfo from '../components/UserInfo';
+import SkillCard from '../components/SkillCard';
+import { SkillCardForm } from '../components/SkillCardForm';
 
 const PerfilPage = () => {
-  const skills = [
+  const [skills, setSkills] = useState([
     {
       setor: 'Marketing',
       tipo: 'SoftSkill',
@@ -23,7 +25,7 @@ const PerfilPage = () => {
       skill: 'UI/UX',
       nivel: 'Intermediário',
     },
-  ];
+  ]);
 
   const certificados = [
     {
@@ -62,8 +64,18 @@ const PerfilPage = () => {
         'https://images.unsplash.com/photo-1493612276216-ee3925520721?w=500&auto=format&fit=crop&q=60&ixlib=rb-4.0.3',
     },
   ];
+
+  const addSkill = (newSkill: {
+    setor: string;
+    tipo: string;
+    skill: string;
+    nivel: string;
+  }) => {
+    setSkills([...skills, newSkill]);
+  };
+
   return (
-    <main className="min-h-screen bg-background p-4 md:p-8">
+    <div className="min-h-screen bg-background p-4 md:p-8">
       <div className="max-w-6xl mx-auto">
         <Card className="mb-8">
           <CardContent className="p-6">
@@ -88,23 +100,14 @@ const PerfilPage = () => {
 
                 <div className="w-full">
                   <h3 className="text-lg font-semibold mb-4">Skills</h3>
-                  <div className="space-y-4">
+                  <div className="space-y-4 overflow-y-auto max-h-[400px]">
                     {skills.map((skill, index) => (
-                      <div key={index} className="bg-secondary p-4 rounded-lg">
-                        <div className="flex justify-between items-center mb-2">
-                          <span className="font-medium">{skill.setor}</span>
-                          <Badge variant="secondary">{skill.tipo}</Badge>
-                        </div>
-                        <div className="text-sm text-muted-foreground">
-                          <p>Skill: {skill.skill}</p>
-                          <p>Nível: {skill.nivel}</p>
-                        </div>
-                      </div>
+                      <SkillCard key={index} skill={skill} index={index} />
                     ))}
                   </div>
-                  <Button variant="default" className="w-full mt-4">
-                    <PlusCircle className="mr-2 h-4 w-4" /> Adicionar Skill
-                  </Button>
+                  <div className="mt-4 flex justify-center">
+                    <SkillCardForm onSubmit={addSkill} />
+                  </div>
                 </div>
               </div>
               <div className="flex">
@@ -127,7 +130,7 @@ const PerfilPage = () => {
           </CardContent>
         </Card>
       </div>
-    </main>
+    </div>
   );
 };
 

@@ -22,7 +22,7 @@ export default function RootLayout({
   return (
     <html lang="pt-BR" suppressHydrationWarning>
       <body className={inter.className} suppressHydrationWarning>
-        <header className="flex justify-between items-center p-3 px-6 bg-gray-800 text-white">
+        <header className="flex justify-between items-center p-1 px-6 bg-gray-800 text-white">
           <div className="flex items-center space-x-4">
             <img src="img/logo.png" width={50} height={50} />
             <div className="flex items-center space-x-2">
