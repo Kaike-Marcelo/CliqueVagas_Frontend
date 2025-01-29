@@ -4,15 +4,18 @@ import React, { useState } from 'react';
 import styles from './JobCard.module.css';
 
 interface JobCardProps {
-    id: string;
+    id: number;
     company: string;
-    status: string;
     title: string;
-    responsibilities: string[];
-    location: string;
+    description: string;
+    jobPostingStatus: string;
+    address: string;
+    applicationDeadline: string;
+    publicationDate: string;
+    updateAt: string;
 }
 
-const JobCard: React.FC<JobCardProps> = ({ id, company, status, title, responsibilities, location }) => {
+const JobCard: React.FC<JobCardProps> = ({ id, company, title, description, jobPostingStatus, address, applicationDeadline, publicationDate, updateAt }) => {
     const [isExpanded, setIsExpanded] = useState(false);
 
     const toggleCard = () => {
@@ -20,25 +23,23 @@ const JobCard: React.FC<JobCardProps> = ({ id, company, status, title, responsib
     };
 
     return (
-        <div className={`${styles.card} ${isExpanded ? styles.expanded : styles.minimized}`} id={id}>
+        <div className={`${styles.card} ${isExpanded ? styles.expanded : styles.minimized}`} id={id.toString()}>
             <div className={styles['card-header']}>
                 <div className={styles['card-header-top']}>
                     <div className={styles['company-info']}>
                         <img src="/img/profile-bl.png" alt="Company Icon" />
                         <span>{company}</span>
                     </div>
-                    <span className={`${styles.status} ${status === 'Inativo' ? styles.inactive : ''}`}>{status}</span>
+                    <span className={`${styles.status} ${jobPostingStatus === 'Inativo' ? styles.inactive : ''}`}>{jobPostingStatus}</span>
                 </div>
                 <h3>{title}</h3>
             </div>
             <div className={styles['card-body']}>
-                <p>Responsabilidades:</p>
-                <ul>
-                    {responsibilities.map((responsibility, index) => (
-                        <li key={index}>{responsibility}</li>
-                    ))}
-                </ul>
-                <p>Local: {location}</p>
+                <p>{description}</p>
+                <p>Endereço: {address}</p>
+                <p>Final do prazo de inscrição: {new Date(applicationDeadline).toLocaleDateString()}</p>
+                <p>Data de publicação: {new Date(publicationDate).toLocaleDateString()}</p>
+                <p>Atualizado pela última vez: {new Date(updateAt).toLocaleDateString()}</p>
             </div>
             <div className={styles['button-container']}>
                 <button className={styles.button} onClick={toggleCard}>Ver Mais</button>
@@ -50,57 +51,49 @@ const JobCard: React.FC<JobCardProps> = ({ id, company, status, title, responsib
 const JobCardContainer: React.FC = () => {
     const cards = [
         {
-            id: 'card1',
+            id: 1,
             company: 'Nome da Empresa',
-            status: 'Ativo',
-            title: 'Título da Vaga',
-            responsibilities: [
-                'Auxiliar na criação de conteúdo para redes sociais e blog.',
-                'Monitorar e analisar métricas de desempenho das campanhas.',
-                'Apoiar na gestão de campanhas de e-mail marketing.',
-                'Colaborar com a equipe na elaboração de estratégias de SEO.'
-            ],
-            location: 'Eunápolis-BA'
+            title: 'Título do Trabalho',
+            description: 'Descrição do trabalho vai aqui.',
+            jobPostingStatus: 'Inativo',
+            address: 'Rua Principal, 123, Cidade, Estado',
+            applicationDeadline: '2023-12-31T23:59:59Z',
+            publicationDate: '2023-01-01T00:00:00Z',
+            updateAt: '2023-01-02T00:00:00Z'
         },
         {
-            id: 'card2',
+            id: 2,
             company: 'Nome da Empresa',
-            status: 'Inativo',
-            title: 'Título da Vaga',
-            responsibilities: [
-                'Auxiliar na criação de conteúdo para redes sociais e blog.',
-                'Monitorar e analisar métricas de desempenho das campanhas.',
-                'Apoiar na gestão de campanhas de e-mail marketing.',
-                'Colaborar com a equipe na elaboração de estratégias de SEO.'
-            ],
-            location: 'Eunápolis-BA'
+            title: 'Título do Trabalho',
+            description: 'Descrição do trabalho vai aqui.',
+            jobPostingStatus: 'Ativo',
+            address: 'Rua Principal, 123, Cidade, Estado',
+            applicationDeadline: '2023-12-31T23:59:59Z',
+            publicationDate: '2023-01-01T00:00:00Z',
+            updateAt: '2023-01-02T00:00:00Z'
         },
         {
-        id: 'card3',
-        company: 'Outra Empresa',
-        status: 'Ativo',
-        title: 'Desenvolvedor Frontend',
-        responsibilities: [
-        'Desenvolver interfaces de usuário eficientes e reutilizáveis.',
-        'Colaborar com designers para transformar protótipos em código.',
-        'Garantir a compatibilidade entre navegadores e dispositivos.',
-        'Otimizar aplicações para máxima velocidade e escalabilidade.'
-        ],
-        location: 'São Paulo-SP'
-    },
-    {
-        id: 'card4',
-        company: 'Outra Empresa',
-        status: 'Inativo',
-        title: 'Analista de Dados',
-        responsibilities: [
-        'Coletar e analisar dados de diversas fontes.',
-        'Desenvolver relatórios e dashboards para a equipe.',
-        'Identificar tendências e padrões nos dados.',
-        'Apoiar a tomada de decisões com base em dados.'
-        ],
-        location: 'Rio de Janeiro-RJ'
-    }
+            id: 3,
+            company: 'Nome da Empresa',
+            title: 'Título do Trabalho',
+            description: 'Descrição do trabalho vai aqui.',
+            jobPostingStatus: 'Inativo',
+            address: 'Rua Principal, 123, Cidade, Estado',
+            applicationDeadline: '2023-12-31T23:59:59Z',
+            publicationDate: '2023-01-01T00:00:00Z',
+            updateAt: '2023-01-02T00:00:00Z'
+        },
+        {
+            id: 4,
+            company: 'Nome da Empresa',
+            title: 'Título do Trabalho',
+            description: 'Descrição do trabalho vai aqui.',
+            jobPostingStatus: 'Ativo',
+            address: 'Rua Principal, 123, Cidade, Estado',
+            applicationDeadline: '2023-12-31T23:59:59Z',
+            publicationDate: '2023-01-01T00:00:00Z',
+            updateAt: '2023-01-02T00:00:00Z'
+        }
     ];
 
     return (
