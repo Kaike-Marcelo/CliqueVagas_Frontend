@@ -8,7 +8,6 @@ export type User = {
   lastName: string;
   urlImageProfile: string | null;
   role: 'INTERN' | 'USER' | 'ADMIN'; // Defina outros possíveis papéis se houver
-  cpf: string;
   phone: string;
   email: string;
   password: string;

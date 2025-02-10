@@ -3,14 +3,23 @@
 import { useEffect, useState } from 'react';
 import { getUsers } from '@/app/services/userService';
 import { User } from './services/types/User';
+import { Intern } from './services/types/Intern';
+import { getInterns } from './services/internService';
 
 export default function Home() {
   const [users, setUsers] = useState<User[]>([]);
   const [error, setError] = useState<string | null>(null);
+  const [interns, setInterns] = useState<Intern[]>([]);
 
   useEffect(() => {
     getUsers()
       .then(setUsers)
+      .catch((err) => setError(err.message));
+  }, []);
+
+  useEffect(() => {
+    getInterns()
+      .then(setInterns)
       .catch((err) => setError(err.message));
   }, []);
 
@@ -28,12 +37,35 @@ export default function Home() {
               </strong>{' '}
               ({user.email})
             </p>
-            <p>
-              CPF: {user.cpf} | Telefone: {user.phone}
-            </p>
+            <p>Telefone: {user.phone}</p>
             <p>
               Role: {user.role} | Status: {user.enabled ? 'Ativo' : 'Inativo'}
             </p>
+          </li>
+        ))}
+      </ul>
+      <h1 className="text-2xl font-bold">Lista de Estagiarios</h1>
+      <ul>
+        {interns.map((intern) => (
+          <li key={intern.id} className="border-b py-2">
+            <p>
+              <strong>
+                {intern.userId.firstName} {intern.userId.lastName}
+              </strong>{' '}
+              ({intern.userId.email})
+            </p>
+            <p>Telefone: {intern.userId.phone}</p>
+            <p>
+              Role: {intern.userId.role} | Status:{' '}
+              {intern.userId.enabled ? 'Ativo' : 'Inativo'}
+            </p>
+            <p>Data de Nascimento: {intern.dateOfBirth}</p>
+            <p>Sexo: {intern.sex}</p>
+            <p>Instituição de Ensino: {intern.educationalInstitution}</p>
+            <p>Área de Interesse: {intern.areaOfInterest}</p>
+            <p>Ano de Entrada: {intern.yearOfEntry}</p>
+            <p>Data de Formatura Esperada: {intern.expectedGraduationDate}</p>
+            <p>CPF: {intern.cpf}</p>
           </li>
         ))}
       </ul>
