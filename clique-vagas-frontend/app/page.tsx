@@ -1,10 +1,10 @@
 'use client';
 
 import { useEffect, useState } from 'react';
-import { getUsers } from '@/app/services/userService';
-import { User } from './services/types/User';
-import { Intern } from './services/types/Intern';
-import { getInterns } from './services/internService';
+import { getUsers } from '@/app/_services/userService';
+import { User } from './_services/types/User';
+import { Intern } from './_services/types/Intern';
+import { getInterns } from './_services/internService';
 
 export default function Home() {
   const [users, setUsers] = useState<User[]>([]);
