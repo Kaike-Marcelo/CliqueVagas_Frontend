@@ -1,6 +1,26 @@
 import { Separator } from './ui/separator';
 
-const UserInfo = () => {
+interface UserInfoProps {
+  userInfo: {
+    nome: string;
+    sobrenome: string;
+    cpf: string;
+    telefone: string;
+    email: string;
+    rua: string;
+    numero: string;
+    cep: string;
+    bairro: string;
+    cidade: string;
+    estado: string;
+    instituicao: string;
+    areaInteresse: string;
+    anoIngresso: string;
+    previsaoFormatura: string;
+  };
+}
+
+const UserInfo = ({ userInfo }: UserInfoProps) => {
   return (
     <div className="max-h-[440px] overflow-y-auto">
       <div className="mb-8">
@@ -8,23 +28,23 @@ const UserInfo = () => {
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           <div>
             <label className="text-sm text-muted-foreground">Nome</label>
-            <p className="font-medium">Alberto Alves</p>
+            <p className="font-medium">{userInfo.nome}</p>
           </div>
           <div>
             <label className="text-sm text-muted-foreground">Sobrenome</label>
-            <p className="font-medium">Almeida Amorim</p>
+            <p className="font-medium">{userInfo.sobrenome}</p>
           </div>
           <div>
             <label className="text-sm text-muted-foreground">CPF</label>
-            <p className="font-medium">123.456.789-10</p>
+            <p className="font-medium">{userInfo.cpf}</p>
           </div>
           <div>
             <label className="text-sm text-muted-foreground">Telefone</label>
-            <p className="font-medium">(73) 98888-8888</p>
+            <p className="font-medium">{userInfo.telefone}</p>
           </div>
           <div className="md:col-span-2">
             <label className="text-sm text-muted-foreground">E-mail</label>
-            <p className="font-medium">albertinhoalmeida@gmail.com</p>
+            <p className="font-medium">{userInfo.email}</p>
           </div>
         </div>
       </div>
@@ -37,27 +57,27 @@ const UserInfo = () => {
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           <div className="md:col-span-2">
             <label className="text-sm text-muted-foreground">Rua</label>
-            <p className="font-medium">Camargo de Solimões</p>
+            <p className="font-medium">{userInfo.rua}</p>
           </div>
           <div>
             <label className="text-sm text-muted-foreground">Número</label>
-            <p className="font-medium">123</p>
+            <p className="font-medium">{userInfo.numero}</p>
           </div>
           <div>
             <label className="text-sm text-muted-foreground">CEP</label>
-            <p className="font-medium">282828-282</p>
+            <p className="font-medium">{userInfo.cep}</p>
           </div>
           <div>
             <label className="text-sm text-muted-foreground">Bairro</label>
-            <p className="font-medium">Sapucaeira</p>
+            <p className="font-medium">{userInfo.bairro}</p>
           </div>
           <div>
             <label className="text-sm text-muted-foreground">Cidade</label>
-            <p className="font-medium">Eunápolis</p>
+            <p className="font-medium">{userInfo.cidade}</p>
           </div>
           <div>
             <label className="text-sm text-muted-foreground">Estado</label>
-            <p className="font-medium">BA</p>
+            <p className="font-medium">{userInfo.estado}</p>
           </div>
         </div>
       </div>
@@ -72,25 +92,25 @@ const UserInfo = () => {
             <label className="text-sm text-muted-foreground">
               Instituição de Ensino
             </label>
-            <p className="font-medium">IFBA</p>
+            <p className="font-medium">{userInfo.instituicao}</p>
           </div>
           <div>
             <label className="text-sm text-muted-foreground">
               Área de interesse
             </label>
-            <p className="font-medium">Marketing</p>
+            <p className="font-medium">{userInfo.areaInteresse}</p>
           </div>
           <div>
             <label className="text-sm text-muted-foreground">
               Ano de Ingresso
             </label>
-            <p className="font-medium">02/2018</p>
+            <p className="font-medium">{userInfo.anoIngresso}</p>
           </div>
           <div>
             <label className="text-sm text-muted-foreground">
               Previsão de Formatura
             </label>
-            <p className="font-medium">06/2045</p>
+            <p className="font-medium">{userInfo.previsaoFormatura}</p>
           </div>
         </div>
       </div>

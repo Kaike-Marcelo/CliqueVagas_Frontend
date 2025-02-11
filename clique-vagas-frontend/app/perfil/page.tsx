@@ -10,6 +10,7 @@ import Certificados from '../components/Certificados';
 import UserInfo from '../components/UserInfo';
 import SkillCard from '../components/SkillCard';
 import { SkillCardForm } from '../components/SkillCardForm';
+import { EditUserInfo } from '../components/EditUserInfo';
 
 const PerfilPage = () => {
   const [skills, setSkills] = useState([
@@ -74,6 +75,30 @@ const PerfilPage = () => {
     setSkills([...skills, newSkill]);
   };
 
+  const [isEditing, setIsEditing] = useState(false);
+  const [userInfo, setUserInfo] = useState({
+    nome: 'Alberto',
+    sobrenome: 'Almeida Amorim',
+    cpf: '123.456.789-10',
+    telefone: '(73) 98888-8888',
+    email: 'albertinhoalmeida@gmail.com',
+    rua: 'Camargo de Solimões',
+    numero: '123',
+    cep: '282828-282',
+    bairro: 'Sapucaeira',
+    cidade: 'Eunápolis',
+    estado: 'BA',
+    instituicao: 'IFBA',
+    areaInteresse: 'Marketing',
+    anoIngresso: '02/2018',
+    previsaoFormatura: '06/2045',
+  });
+
+  const handleSave = (updatedUserInfo: typeof userInfo) => {
+    setUserInfo(updatedUserInfo);
+    setIsEditing(false);
+  };
+
   return (
     <div className="min-h-screen bg-background p-4 md:p-8">
       <div className="max-w-6xl mx-auto">
@@ -81,17 +106,12 @@ const PerfilPage = () => {
           <CardContent className="p-6">
             <div className="flex flex-col md:flex-row gap-8">
               {/* Coluna Esquerda */}
-              <div className="md:w-1/3 flex flex-col items-center">
+              <div className="md:w-1/3 flex flex-col items-center gap-1">
                 <Avatar className="w-32 h-32 mb-4">
                   <AvatarImage src="https://www.intern-brazil.com.br/wp-content/uploads/2019/12/entendimento-perfil-480x480.png" />
                   <AvatarFallback>AA</AvatarFallback>
                 </Avatar>
-                <Button
-                  variant="outline"
-                  className="mb-4 w-full border-primary text-primary"
-                >
-                  <Edit className="mr-2 h-4 w-4" /> Alterar Dados
-                </Button>
+                <EditUserInfo userInfo={userInfo} onSave={handleSave} />
                 <Button variant="default" className="w-full mb-8">
                   <Download className="mr-2 h-4 w-4" /> Currículo
                 </Button>
@@ -124,7 +144,7 @@ const PerfilPage = () => {
                 <Separator className="my-8" />
 
                 {/* Informações Pessoais */}
-                <UserInfo />
+                <UserInfo userInfo={userInfo} />
               </div>
             </div>
           </CardContent>
