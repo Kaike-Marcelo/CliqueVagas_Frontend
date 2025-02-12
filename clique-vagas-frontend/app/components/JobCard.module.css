@@ -4,7 +4,7 @@
     padding: 0;
     display: flex;
     justify-content: center;
-    align-items: center; /* Center items vertically */
+    align-items: center;
     background-color: #f4f4f9;
     height: 100vh;
 }
@@ -17,7 +17,7 @@
     gap: 20px;
     padding: 10px;
     box-sizing: border-box;
-    margin: auto; /* Center container horizontally */
+    margin: auto;
 }
 
 .card {
@@ -34,7 +34,7 @@
 }
 
 .card.expanded {
-    max-height: 1000px; /* Valor alto para garantir que a altura máxima seja suficiente para exibir todo o conteúdo */
+    max-height: 1000px;
 }
 
 .card-header {
@@ -49,6 +49,7 @@
     justify-content: space-between;
     align-items: center;
     width: 100%;
+    gap: 10px;
 }
 
 .card-header h3 {
@@ -91,9 +92,12 @@
 
 .button-container {
     display: flex;
-    justify-content: flex-end;
+    justify-content: space-between;
+    align-items: center;
     padding: 0 16px 16px 16px;
+    gap: 10px;
 }
+
 
 .button {
     background-color: #007bff;
@@ -101,10 +105,98 @@
     border: none;
     border-radius: 4px;
     padding: 8px 12px;
-    cursor: pointer; /* Apply cursor pointer only to the button */
+    cursor: pointer;
     transition: background-color 0.2s ease;
+    order: 2; /* Garante que o Ver Mais fique à direita */
 }
-
 .button:hover {
     background-color: #0056b3;
+}
+
+/* Novos estilos para like */
+.header-right {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.likeButton {
+    background: none;
+    border: 1px solid #ccc;
+    border-radius: 20px;
+    padding: 4px 12px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    transition: all 0.2s ease;
+    order: 1; /* Garante que o Like fique à esquerda */
+}
+
+.likeButton:hover {
+    background-color: #ffe6e6;
+}
+
+.likeButton.liked {
+    background-color: #ff4d4d;
+    border-color: #ff4d4d;
+    color: white;
+}
+
+.creatorButtons {
+    display: flex;
+    gap: 8px;
+}
+
+.editButton {
+    background-color: #ffc107;
+    color: black;
+    padding: 8px 12px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: background-color 0.2s;
+}
+
+.editButton:hover {
+    background-color: #e0a800;
+}
+
+.deleteButton {
+    background-color: #dc3545;
+    color: white;
+    padding: 8px 12px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: background-color 0.2s;
+}
+
+.deleteButton:hover {
+    background-color: #c82333;
+}
+
+.userButtons {
+    display: flex;
+    gap: 8px;
+    align-items: center;
+}
+
+.addButton {
+    background-color: #28a745;  /* Verde */
+    color: #fff;
+    border: none;
+    border-radius: 6px;
+    padding: 10px 16px;
+    font-size: 16px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: background-color 0.3s ease, transform 0.2s ease, box-shadow 0.2s ease;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.addButton:hover {
+    background-color: #218838;
+    transform: translateY(-2px);
+    box-shadow: 0 6px 8px rgba(0, 0, 0, 0.15);
 }
