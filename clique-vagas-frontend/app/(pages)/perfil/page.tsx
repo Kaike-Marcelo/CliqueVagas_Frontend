@@ -2,15 +2,19 @@
 
 import { useState } from 'react';
 import { Download, Edit, PlusCircle } from 'lucide-react';
-import { Card, CardContent } from '../_components/ui/card';
-import { Avatar, AvatarFallback, AvatarImage } from '../_components/ui/avatar';
-import { Button } from '../_components/ui/button';
-import { Separator } from '../_components/ui/separator';
-import Certificados from '../_components/Certificados';
-import UserInfo from '../_components/UserInfo';
-import SkillCard from '../_components/SkillCard';
-import { SkillCardForm } from '../_components/SkillCardForm';
-import { EditUserInfo } from '../_components/EditUserInfo';
+import { Card, CardContent } from '@/app/_components/ui/card';
+import {
+  Avatar,
+  AvatarFallback,
+  AvatarImage,
+} from '@/app/_components/ui/avatar';
+import { Button } from '@/app/_components/ui/button';
+import { Separator } from '@/app/_components/ui/separator';
+import Certificados from '@/app/_components/Certificados';
+import UserInfo from '@/app/_components/UserInfo';
+import SkillCard from '@/app/_components/SkillCard';
+import { SkillCardForm } from '@/app/_components/SkillCardForm';
+import { EditUserInfo } from '@/app/_components/EditUserInfo';
 
 const PerfilPage = () => {
   const [skills, setSkills] = useState([

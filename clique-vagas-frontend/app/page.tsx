@@ -50,14 +50,14 @@ export default function Home() {
           <li key={intern.id} className="border-b py-2">
             <p>
               <strong>
-                {intern.userId.firstName} {intern.userId.lastName}
+                {intern.user.firstName} {intern.user.lastName}
               </strong>{' '}
-              ({intern.userId.email})
+              ({intern.user.email})
             </p>
-            <p>Telefone: {intern.userId.phone}</p>
+            <p>Telefone: {intern.user.phone}</p>
             <p>
-              Role: {intern.userId.role} | Status:{' '}
-              {intern.userId.enabled ? 'Ativo' : 'Inativo'}
+              Role: {intern.user.role} | Status:{' '}
+              {intern.user.enabled ? 'Ativo' : 'Inativo'}
             </p>
             <p>Data de Nascimento: {intern.dateOfBirth}</p>
             <p>Sexo: {intern.sex}</p>

@@ -8,6 +8,7 @@ import { Input } from '@/app/_components/ui/input';
 import Link from 'next/link';
 import { ThemeProvider } from 'next-themes';
 import { ModeToggle } from '@/app/_components/ModeToggle';
+import Image from 'next/image';
 
 const inter = Inter({ subsets: ['latin'] });
 
@@ -29,7 +30,7 @@ export default function RootLayout({
           <header className="flex justify-between items-center p-1 px-6 bg-sky-950 text-white">
             <div className="max-w-6xl mx-auto flex justify-between w-full">
               <div className="flex items-center space-x-4">
-                <img src="img/logo.png" width={40} height={40} />
+                <Image src="/img/logo.png" alt="Logo" width={40} height={40} />
                 <div className="flex items-center space-x-2">
                   <SearchIcon />
                   <Input
