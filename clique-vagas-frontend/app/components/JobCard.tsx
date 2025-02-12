@@ -1,7 +1,7 @@
 "use client";
 
-import JobForm from './JobForm';
 import React, { useState, useEffect } from 'react';
+import JobForm from './JobForm';
 import styles from './JobCard.module.css';
 import { getUserRole } from '../utils/UserRole';
 
@@ -35,6 +35,9 @@ const JobCard: React.FC<JobCardProps> = ({
     const [likeCount, setLikeCount] = useState(0);
     const [showEditForm, setShowEditForm] = useState(false);
 
+    // Considera autenticado se userRole não for null
+    const isAuthenticated = userRole !== null;
+
     const toggleCard = () => {
         setIsExpanded(!isExpanded);
     };
@@ -66,7 +69,6 @@ const JobCard: React.FC<JobCardProps> = ({
                 <p>Atualizado pela última vez: {new Date(updateAt).toLocaleDateString()}</p>
             </div>
 
-            {/* Adiciona o formulário de edição se showEditForm for true */}
             {showEditForm && (
                 <JobForm
                     initialData={{
@@ -77,7 +79,7 @@ const JobCard: React.FC<JobCardProps> = ({
                         applicationDeadline
                     }}
                     onSubmit={(data) => {
-                        // Lógica para enviar para API (implementar posteriormente)
+                        // Lógica para enviar dados via API (implementar posteriormente)
                         setShowEditForm(false);
                     }}
                     onCancel={() => setShowEditForm(false)}
@@ -85,26 +87,40 @@ const JobCard: React.FC<JobCardProps> = ({
             )}
 
             <div className={styles['button-container']}>
-                {userRole === 'COMPANY' ? (
-                    <div className={styles.creatorButtons}>
-                        <button className={styles.editButton} onClick={() => setShowEditForm(true)}>
-                            Alterar
-                        </button>
-                        <button className={styles.deleteButton}>
-                            Excluir
-                        </button>
-                    </div>
-                ) : userRole === 'INTERN' ? (
-                    <button className={styles.inscreverButton}>
-                        Inscrever-se na vaga
-                    </button>
-                ) : null}
+                {/* Sempre renderiza o contêiner à esquerda para manter o layout */}
+                <div className={styles.creatorButtons}>
+                    {isAuthenticated && (
+                        <>
+                            {userRole === 'COMPANY' ? (
+                                <>
+                                    <button className={styles.editButton} onClick={() => setShowEditForm(true)}>
+                                        Alterar
+                                    </button>
+                                    <button className={styles.deleteButton}>
+                                        Excluir
+                                    </button>
+                                </>
+                            ) : userRole === 'INTERN' ? (
+                                <button className={styles.inscreverButton}>
+                                    Inscrever-se na vaga
+                                </button>
+                            ) : null}
+                        </>
+                    )}
+                </div>
 
                 <div className={styles.userButtons}>
-                    <button onClick={handleLike} className={`${styles.likeButton} ${liked ? styles.liked : ''}`}>
+                    <button
+                        onClick={handleLike}
+                        disabled={!isAuthenticated}
+                        className={`${styles.likeButton} ${liked ? styles.liked : ''}`}
+                    >
                         ♥ {likeCount}
                     </button>
-                    <button className={styles.button} onClick={toggleCard}>
+                    <button
+                        className={styles.button}
+                        onClick={toggleCard}
+                    >
                         {isExpanded ? 'Ver Menos' : 'Ver Mais'}
                     </button>
                 </div>
