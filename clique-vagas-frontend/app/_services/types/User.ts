@@ -1,22 +1,41 @@
-export type Authority = {
-  authority: string;
-};
-
-export type User = {
+export interface User {
   userId: number;
   firstName: string;
   lastName: string;
-  urlImageProfile: string | null;
-  role: 'INTERN' | 'USER' | 'ADMIN'; // Defina outros possíveis papéis se houver
+  email: string;
   phone: string;
+  role: 'INTERN' | 'COMPANY';
+  enabled: boolean;
+  createdAt: string;
+  updatedAt: string;
+}
+
+export interface CreateUserDto {
+  firstName: string;
+  lastName: string;
+  email: string;
+  phone: string;
+  role: 'INTERN' | 'COMPANY';
+  password: string;
+  description: string;
+}
+
+export interface UpdateUserDto {
+  firstName?: string;
+  lastName?: string;
+  email?: string;
+  phone?: string;
+  role?: 'INTERN' | 'COMPANY';
+  password?: string;
+  description?: string;
+  enabled?: boolean;
+}
+
+export interface AuthenticationDto {
   email: string;
   password: string;
-  createdAt: string; // Pode ser tratado como Date no frontend
-  updatedAt: string;
-  authorities: Authority[];
-  username: string;
-  enabled: boolean;
-  credentialsNonExpired: boolean;
-  accountNonExpired: boolean;
-  accountNonLocked: boolean;
-};
+}
+
+export interface LoginResponseDto {
+  token: string;
+}
