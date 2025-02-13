@@ -63,13 +63,12 @@ const VagasPage: React.FC = () => {
                     jobPostingStatus: item.jobPost.jobPostingStatus === 'ACTIVE' ? 'Ativo' : 'Inativo',
                     address: item.jobPost.address,
                     applicationDeadline: item.jobPost.applicationDeadline,
-                    publicationDate: new Date().toISOString(), // Mock temporário
-                    updateAt: new Date().toISOString() // Mock temporário
+                    publicationDate: new Date().toISOString(),
+                    updateAt: new Date().toISOString()
                 }));
 
                 setJobs(formattedJobs);
             } else {
-                // Mock para INTERN (manter temporário)
                 const mockData = [
                     {
                         id: 2,
@@ -87,7 +86,6 @@ const VagasPage: React.FC = () => {
             }
         } catch (error) {
             console.error('Erro ao buscar vagas:', error);
-            // Fallback para mock data em caso de erro
             setJobs([{
                 id: 1,
                 company: "Sua Empresa",
@@ -109,18 +107,70 @@ const VagasPage: React.FC = () => {
         }));
     };
 
-    const handleAddJob = (newJob: Job) => {
-        setJobs([...jobs, { ...newJob, id: jobs.length + 1 }]);
-        setShowAddForm(false);
+    const handleAddJob = async (newJob: Omit<Job, 'id' | 'publicationDate' | 'updateAt'>) => {
+        try {
+            const response = await fetch('http://localhost:8080/job_posting', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${localStorage.getItem('token')}`
+                },
+                body: JSON.stringify({
+                    ...newJob,
+                    jobPostingStatus: newJob.jobPostingStatus === 'Ativo' ? 'ACTIVE' : 'INACTIVE'
+                })
+            });
+
+            if (!response.ok) throw new Error('Erro ao criar vaga');
+            fetchJobs('COMPANY');
+            setShowAddForm(false);
+        } catch (error) {
+            console.error('Erro:', error);
+        }
     };
 
-    const handleEditJob = (updatedJob: Job) => {
-        setJobs(jobs.map(job => job.id === updatedJob.id ? updatedJob : job));
-        setSelectedJob(null);
+    const handleEditJob = async (updatedJob: Job) => {
+        try {
+            const response = await fetch('http://localhost:8080/job_posting', {
+                method: 'PUT',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${localStorage.getItem('token')}`
+                },
+                body: JSON.stringify({
+                    id: updatedJob.id,
+                    title: updatedJob.title,
+                    description: updatedJob.description,
+                    jobPostingStatus: updatedJob.jobPostingStatus === 'Ativo' ? 'ACTIVE' : 'INACTIVE',
+                    address: updatedJob.address,
+                    applicationDeadline: updatedJob.applicationDeadline
+                })
+            });
+
+            if (!response.ok) throw new Error('Erro ao atualizar vaga');
+            fetchJobs('COMPANY');
+            setSelectedJob(null);
+        } catch (error) {
+            console.error('Erro:', error);
+        }
     };
 
-    const handleDeleteJob = (jobId: number) => {
-        setJobs(jobs.filter(job => job.id !== jobId));
+    const handleDeleteJob = async (jobId: number) => {
+        if (!window.confirm('Tem certeza que deseja excluir esta vaga?')) return;
+        
+        try {
+            const response = await fetch(`http://localhost:8080/job_posting/${jobId}`, {
+                method: 'DELETE',
+                headers: {
+                    'Authorization': `Bearer ${localStorage.getItem('token')}`
+                }
+            });
+
+            if (!response.ok) throw new Error('Erro ao excluir vaga');
+            fetchJobs('COMPANY');
+        } catch (error) {
+            console.error('Erro:', error);
+        }
     };
 
     return (

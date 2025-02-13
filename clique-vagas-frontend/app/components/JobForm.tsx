@@ -5,6 +5,7 @@ import styles from './JobForm.module.css';
 
 interface JobFormProps {
     initialData?: {
+        id?: number;
         title: string;
         description: string;
         jobPostingStatus: string;
@@ -17,6 +18,7 @@ interface JobFormProps {
 
 const JobForm: React.FC<JobFormProps> = ({ initialData, onSubmit, onCancel }) => {
     const [formData, setFormData] = useState({
+        id: initialData?.id,
         title: initialData?.title || '',
         description: initialData?.description || '',
         jobPostingStatus: initialData?.jobPostingStatus || 'Ativo',
@@ -46,6 +48,10 @@ const JobForm: React.FC<JobFormProps> = ({ initialData, onSubmit, onCancel }) =>
             <div className={styles.formContainer}>
                 <h2>{initialData ? 'Editar Vaga' : 'Criar Vaga'}</h2>
                 <form onSubmit={handleSubmit}>
+                    {initialData?.id && (
+                        <input type="hidden" name="id" value={formData.id} />
+                    )}
+                    
                     <div className={styles.formGroup}>
                         <label>Título:</label>
                         <input
