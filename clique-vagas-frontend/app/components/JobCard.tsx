@@ -1,9 +1,7 @@
 "use client";
 
-import React, { useState, useEffect } from 'react';
-import JobForm from './JobForm';
+import React from 'react';
 import styles from './JobCard.module.css';
-import { getUserRole } from '../utils/UserRole';
 
 interface JobCardProps {
     id: number;
@@ -15,7 +13,18 @@ interface JobCardProps {
     applicationDeadline: string;
     publicationDate: string;
     updateAt: string;
-    userRole: string | null;
+    isExpanded: boolean;
+    liked: boolean;
+    likeCount: number;
+    showEditForm: boolean;
+    isAuthenticated: boolean;
+    userRole?: string | null;
+    onToggle: () => void;
+    onLike: () => void;
+    onEdit: () => void;
+    onDelete: () => void;
+    onSubscribe: () => void;
+    children?: React.ReactNode;
 }
 
 const JobCard: React.FC<JobCardProps> = ({
@@ -28,27 +37,21 @@ const JobCard: React.FC<JobCardProps> = ({
     applicationDeadline,
     publicationDate,
     updateAt,
-    userRole
+    isExpanded,
+    liked,
+    likeCount,
+    showEditForm,
+    isAuthenticated,
+    userRole,
+    onToggle,
+    onLike,
+    onEdit,
+    onDelete,
+    onSubscribe,
+    children
 }) => {
-    const [isExpanded, setIsExpanded] = useState(false);
-    const [liked, setLiked] = useState(false);
-    const [likeCount, setLikeCount] = useState(0);
-    const [showEditForm, setShowEditForm] = useState(false);
-
-    // Considera autenticado se userRole não for null
-    const isAuthenticated = userRole !== null;
-
-    const toggleCard = () => {
-        setIsExpanded(!isExpanded);
-    };
-
-    const handleLike = () => {
-        setLiked(!liked);
-        setLikeCount(prev => (liked ? prev - 1 : prev + 1));
-    };
-
     return (
-        <div className={`${styles.card} ${isExpanded ? styles.expanded : styles.minimized}`} id={id.toString()}>
+        <div className={`${styles.card} ${isExpanded ? styles.expanded : styles.minimized}`}>
             <div className={styles['card-header']}>
                 <div className={styles['card-header-top']}>
                     <div className={styles['company-info']}>
@@ -61,66 +64,45 @@ const JobCard: React.FC<JobCardProps> = ({
                 </div>
                 <h3>{title}</h3>
             </div>
+            
             <div className={styles['card-body']}>
                 <p>{description}</p>
                 <p>Endereço: {address}</p>
-                <p>Final do prazo de inscrição: {new Date(applicationDeadline).toLocaleDateString()}</p>
-                <p>Data de publicação: {new Date(publicationDate).toLocaleDateString()}</p>
-                <p>Atualizado pela última vez: {new Date(updateAt).toLocaleDateString()}</p>
+                <p>Final do prazo: {new Date(applicationDeadline).toLocaleDateString()}</p>
+                <p>Publicação: {new Date(publicationDate).toLocaleDateString()}</p>
+                <p>Última atualização: {new Date(updateAt).toLocaleDateString()}</p>
             </div>
 
-            {showEditForm && (
-                <JobForm
-                    initialData={{
-                        title,
-                        description,
-                        jobPostingStatus,
-                        address,
-                        applicationDeadline
-                    }}
-                    onSubmit={(data) => {
-                        // Lógica para enviar dados via API (implementar posteriormente)
-                        setShowEditForm(false);
-                    }}
-                    onCancel={() => setShowEditForm(false)}
-                />
-            )}
+            {children}
 
             <div className={styles['button-container']}>
-                {/* Sempre renderiza o contêiner à esquerda para manter o layout */}
                 <div className={styles.creatorButtons}>
-                    {isAuthenticated && (
+                    {isAuthenticated && userRole === 'COMPANY' && (
                         <>
-                            {userRole === 'COMPANY' ? (
-                                <>
-                                    <button className={styles.editButton} onClick={() => setShowEditForm(true)}>
-                                        Alterar
-                                    </button>
-                                    <button className={styles.deleteButton}>
-                                        Excluir
-                                    </button>
-                                </>
-                            ) : userRole === 'INTERN' ? (
-                                <button className={styles.inscreverButton}>
-                                    Inscrever-se na vaga
-                                </button>
-                            ) : null}
+                            <button className={styles.editButton} onClick={onEdit}>
+                                Alterar
+                            </button>
+                            <button className={styles.deleteButton} onClick={onDelete}>
+                                Excluir
+                            </button>
                         </>
+                    )}
+                    {isAuthenticated && userRole === 'INTERN' && (
+                        <button className={styles.inscreverButton} onClick={onSubscribe}>
+                            Inscrever-se
+                        </button>
                     )}
                 </div>
 
                 <div className={styles.userButtons}>
                     <button
-                        onClick={handleLike}
+                        onClick={onLike}
                         disabled={!isAuthenticated}
                         className={`${styles.likeButton} ${liked ? styles.liked : ''}`}
                     >
                         ♥ {likeCount}
                     </button>
-                    <button
-                        className={styles.button}
-                        onClick={toggleCard}
-                    >
+                    <button className={styles.button} onClick={onToggle}>
                         {isExpanded ? 'Ver Menos' : 'Ver Mais'}
                     </button>
                 </div>
@@ -129,81 +111,4 @@ const JobCard: React.FC<JobCardProps> = ({
     );
 };
 
-const JobCardContainer: React.FC = () => {
-    const [userRole, setUserRole] = useState<string | null>(null);
-    const [showAddForm, setShowAddForm] = useState(false);
-
-    useEffect(() => {
-        setUserRole(getUserRole());
-    }, []);
-
-    const cards = [
-        {
-            id: 1,
-            company: 'Nome da Empresa',
-            title: 'Título do Trabalho',
-            description: 'Descrição do trabalho vai aqui.',
-            jobPostingStatus: 'Inativo',
-            address: 'Rua Principal, 123, Cidade, Estado',
-            applicationDeadline: '2023-12-31T23:59:59Z',
-            publicationDate: '2023-01-01T00:00:00Z',
-            updateAt: '2023-01-02T00:00:00Z'
-        },
-        {
-            id: 2,
-            company: 'Nome da Empresa',
-            title: 'Título do Trabalho',
-            description: 'Descrição do trabalho vai aqui.',
-            jobPostingStatus: 'Ativo',
-            address: 'Rua Principal, 123, Cidade, Estado',
-            applicationDeadline: '2023-12-31T23:59:59Z',
-            publicationDate: '2023-01-01T00:00:00Z',
-            updateAt: '2023-01-02T00:00:00Z'
-        },
-        {
-            id: 3,
-            company: 'Nome da Empresa',
-            title: 'Título do Trabalho',
-            description: 'Descrição do trabalho vai aqui.',
-            jobPostingStatus: 'Inativo',
-            address: 'Rua Principal, 123, Cidade, Estado',
-            applicationDeadline: '2023-12-31T23:59:59Z',
-            publicationDate: '2023-01-01T00:00:00Z',
-            updateAt: '2023-01-02T00:00:00Z'
-        },
-        {
-            id: 4,
-            company: 'Nome da Empresa',
-            title: 'Título do Trabalho',
-            description: 'Descrição do trabalho vai aqui.',
-            jobPostingStatus: 'Ativo',
-            address: 'Rua Principal, 123, Cidade, Estado',
-            applicationDeadline: '2023-12-31T23:59:59Z',
-            publicationDate: '2023-01-01T00:00:00Z',
-            updateAt: '2023-01-02T00:00:00Z'
-        }
-    ];
-
-    return (
-        <div className={styles['card-container']}>
-            {userRole === 'COMPANY' && (
-                <button onClick={() => setShowAddForm(true)} className={styles.addButton}>
-                    Adicionar Vaga
-                </button>
-            )}
-
-            {cards.map(card => (
-                <JobCard key={card.id} {...card} userRole={userRole} />
-            ))}
-
-            {showAddForm && (
-                <JobForm
-                    onSubmit={() => setShowAddForm(false)}
-                    onCancel={() => setShowAddForm(false)}
-                />
-            )}
-        </div>
-    );
-};
-
-export default JobCardContainer;
+export default JobCard;
