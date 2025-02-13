@@ -2,6 +2,7 @@ import { cn } from '@/app/_lib/utils';
 import { Button } from '@/app/_components/ui/button';
 import { Input } from '@/app/_components/ui/input';
 import { Label } from '@/app/_components/ui/label';
+import Link from 'next/link';
 
 export function LoginForm({
   className,
@@ -38,9 +39,9 @@ export function LoginForm({
       </div>
       <div className="text-center text-sm">
         Não tem uma conta?{' '}
-        <a href="#" className="underline underline-offset-4">
+        <Link href="/auth/register" className="underline underline-offset-4">
           Cadastre-se
-        </a>
+        </Link>
       </div>
     </form>
   );
