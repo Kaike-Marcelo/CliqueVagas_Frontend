@@ -51,40 +51,65 @@ const VagasPage: React.FC = () => {
 
     const fetchJobs = async (role: string) => {
         try {
-            if (role === 'COMPANY') {
-                const email = getUserEmail();
-                if (!email) {
-                    console.error('E-mail não encontrado');
-                    return;
-                }
-
-                const response = await fetch(`http://localhost:8080/job_posting/company`, {
-                    headers: {
-                        "Authorization": `Bearer ${localStorage.getItem('token')}`
+            if (role === 'COMPANY')
+                {
+                    const email = getUserEmail();
+                    if (!email) {
+                        console.error('E-mail não encontrado');
+                        return;
                     }
-                });
-                if (!response.ok) throw new Error('Erro na API');
 
-                const data = await response.json();
+                    const response = await fetch(`http://localhost:8080/job_posting/company`, {
+                        headers: {
+                            "Authorization": `Bearer ${localStorage.getItem('token')}`
+                        }
+                    });
+                    if (!response.ok) throw new Error('Erro na API');
 
-                const formattedJobs = data.map((item: any) => ({
-                    id: item.jobPost.id,
-                    company: "Sua Empresa",
-                    title: item.jobPost.title,
-                    description: item.jobPost.description,
-                    jobPostingStatus: item.jobPost.jobPostingStatus === 'ACTIVE' ? 'Ativo' : 'Inativo',
-                    address: item.jobPost.address,
-                    applicationDeadline: item.jobPost.applicationDeadline,
-                    publicationDate: new Date().toISOString(),
-                    updateAt: new Date().toISOString(),
-                    companyEmail: email // propriedade adicionada
-                }));
+                    const data = await response.json();
 
-                setJobs(formattedJobs);
-            } else {
-                // Para usuários INTERN (ou outros) sem mock jobs, exibe mensagem de "sem postagens"
-                setJobs([]);
-            }
+                    const formattedJobs = data.map((item: any) => ({
+                        id: item.jobPost.id,
+                        company: "Sua Empresa",
+                        title: item.jobPost.title,
+                        description: item.jobPost.description,
+                        jobPostingStatus: item.jobPost.jobPostingStatus === 'ACTIVE' ? 'Ativo' : 'Inativo',
+                        address: item.jobPost.address,
+                        applicationDeadline: item.jobPost.applicationDeadline,
+                        publicationDate: new Date().toISOString(),
+                        updateAt: new Date().toISOString(),
+                        companyEmail: email // propriedade adicionada
+                    }));
+
+                    setJobs(formattedJobs);
+                }    
+            else if (role === 'INTERN')
+                {
+                    const response = await fetch(`http://localhost:8080/inscriptionJobPosting/intern`, {
+                        headers: {
+                            "Authorization": `Bearer ${localStorage.getItem('token')}`
+                        }
+                    });
+    
+                    if (!response.ok) throw new Error('Erro na API');
+    
+                    const data = await response.json();
+    
+                    const formattedJobs = data.map((item: any) => ({
+                        id: item.id,
+                        company: "Não disponível", // Ajuste conforme a necessidade
+                        title: item.title,
+                        description: item.description,
+                        jobPostingStatus: item.jobPostingStatus === 'ACTIVE' ? 'Ativo' : 'Inativo',
+                        address: item.address,
+                        applicationDeadline: item.applicationDeadline,
+                        publicationDate: new Date().toISOString(),
+                        updateAt: new Date().toISOString(),
+                        companyEmail: "" // Valor padrão, pois não é retornado pela API
+                    }));
+    
+                    setJobs(formattedJobs);
+                }
         } catch (error) {
             console.error('Erro ao buscar vagas:', error);
             setJobs([{
