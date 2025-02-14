@@ -24,6 +24,7 @@ interface Job {
 
 const VagasPage: React.FC = () => {
     const [userRole, setUserRole] = useState<string | null>(null);
+    const [userEmail, setUserEmail] = useState<string | null>(null);
     const [showAddForm, setShowAddForm] = useState(false);
     const [jobs, setJobs] = useState<Job[]>([]);
     const [selectedJob, setSelectedJob] = useState<Job | null>(null);
@@ -32,13 +33,19 @@ const VagasPage: React.FC = () => {
     useEffect(() => {
         const role = getUserRole();
         const isAuthenticated = role !== null;
-        
+
         if (!isAuthenticated) {
             window.location.href = '/login';
             return;
         }
-        
+
         setUserRole(role);
+        if (role === 'COMPANY') {
+            const email = getUserEmail();
+            if (email) {
+                setUserEmail(email);
+            }
+        }
         fetchJobs(role);
     }, []);
 
@@ -50,16 +57,16 @@ const VagasPage: React.FC = () => {
                     console.error('E-mail não encontrado');
                     return;
                 }
-    
+
                 const response = await fetch(`http://localhost:8080/job_posting/company`, {
                     headers: {
                         "Authorization": `Bearer ${localStorage.getItem('token')}`
                     }
                 });
                 if (!response.ok) throw new Error('Erro na API');
-                
+
                 const data = await response.json();
-                
+
                 const formattedJobs = data.map((item: any) => ({
                     id: item.jobPost.id,
                     company: "Sua Empresa",
@@ -72,7 +79,7 @@ const VagasPage: React.FC = () => {
                     updateAt: new Date().toISOString(),
                     companyEmail: email // propriedade adicionada
                 }));
-    
+
                 setJobs(formattedJobs);
             } else {
                 // Para usuários INTERN (ou outros) sem mock jobs, exibe mensagem de "sem postagens"
@@ -152,7 +159,7 @@ const VagasPage: React.FC = () => {
 
     const handleDeleteJob = async (jobId: number) => {
         if (!window.confirm('Tem certeza que deseja excluir esta vaga?')) return;
-        
+
         try {
             const response = await fetch(`http://localhost:8080/job_posting/${jobId}`, {
                 method: 'DELETE',
@@ -171,7 +178,7 @@ const VagasPage: React.FC = () => {
     return (
         <div className={styles.pageContainer}>
             <Header />
-            
+
             <main className={styles.mainContent}>
                 <div className={styles.cardWrapper}>
                     {userRole === 'COMPANY' && (
@@ -182,7 +189,7 @@ const VagasPage: React.FC = () => {
                             Adicionar Vaga
                         </button>
                     )}
-    
+
                     {jobs.length === 0 ? (
                         <div className={styles.noJobsMessage}>
                             {userRole === 'COMPANY' 
@@ -190,27 +197,32 @@ const VagasPage: React.FC = () => {
                                 : "Nada por aqui. Se candidate em alguma vaga!"}
                         </div>
                     ) : (
-                        jobs.map(job => (
-                            <JobCard
-                                key={job.id}
-                                {...job}
-                                isAuthenticated={userRole !== null}
-                                userRole={userRole}
-                                isExpanded={expandedCards[job.id] || false}
-                                onToggle={() => handleToggleCard(job.id)}
-                                onSubscribe={() => {}}
-                            >
-                                {selectedJob?.id === job.id && (
-                                    <JobForm
-                                        initialData={selectedJob}
-                                        onSubmit={handleEditJob}
-                                        onCancel={() => setSelectedJob(null)}
-                                    />
-                                )}
-                            </JobCard>
-                        ))
+                        jobs.map(job => {
+                            const isOwner = userRole === 'COMPANY' && userEmail === job.companyEmail;
+                            return (
+                                <JobCard
+                                    key={job.id}
+                                    {...job}
+                                    isAuthenticated={userRole !== null}
+                                    userRole={userRole}
+                                    isExpanded={expandedCards[job.id] || false}
+                                    onToggle={() => handleToggleCard(job.id)}
+                                    onEdit={isOwner ? () => setSelectedJob(job) : undefined}
+                                    onDelete={isOwner ? () => handleDeleteJob(job.id) : undefined}
+                                    onSubscribe={() => {}}
+                                >
+                                    {selectedJob?.id === job.id && (
+                                        <JobForm
+                                            initialData={selectedJob}
+                                            onSubmit={handleEditJob}
+                                            onCancel={() => setSelectedJob(null)}
+                                        />
+                                    )}
+                                </JobCard>
+                            );
+                        })
                     )}
-    
+
                     {showAddForm && (
                         <JobForm
                             onSubmit={handleAddJob}
@@ -219,7 +231,7 @@ const VagasPage: React.FC = () => {
                     )}
                 </div>
             </main>
-    
+
             <Footer />
         </div>
     );
