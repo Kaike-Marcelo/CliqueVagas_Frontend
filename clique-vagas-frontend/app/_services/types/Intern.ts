@@ -35,7 +35,7 @@ export interface CreateInternDto {
   };
   intern: {
     dateOfBirth: string;
-    sex: 'M' | 'F' | 'OTHER';
+    sex: string;
     cpf: string;
     educationalInstitution: string;
     areaOfInterest: string;

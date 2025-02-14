@@ -1,6 +1,6 @@
 'use client';
 
-import { useForm } from 'react-hook-form';
+import { Controller, useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
 import { CreateInternDto } from '@/app/_services/types/Intern';
@@ -40,7 +40,7 @@ const schema = z
       .min(6, 'A confirmação da senha deve ter pelo menos 6 caracteres'),
     description: z.string().min(1, 'Descrição é obrigatória'),
     dateOfBirth: z.string().min(1, 'Data de nascimento é obrigatória'),
-    sex: z.string().min(1, 'Sexo é obrigatório'),
+    sex: z.string(),
     cpf: z
       .string()
       .min(1, 'CPF é obrigatório')
@@ -78,17 +78,20 @@ type FormData = z.infer<typeof schema>;
 export default function InternRegisterForm({
   onRegister,
 }: InternRegisterFormProps) {
+  console.log('InternRegisterForm rendered');
+
   const {
     register,
     handleSubmit,
     formState: { errors },
-    setValue,
+    control,
   } = useForm<FormData>({
     resolver: zodResolver(schema),
   });
 
   const onSubmit = (data: FormData) => {
-    onRegister({
+    console.log('onSubmit called with data:', data);
+    const internData = {
       address: {
         cep: data.cep,
         street: data.street,
@@ -101,7 +104,7 @@ export default function InternRegisterForm({
       user: {
         firstName: data.firstName,
         lastName: data.lastName,
-        role: 'INTERN',
+        role: 'INTERN' as 'INTERN',
         phone: data.phone,
         email: data.email,
         password: data.password,
@@ -109,20 +112,26 @@ export default function InternRegisterForm({
       },
       intern: {
         dateOfBirth: data.dateOfBirth,
-        sex: data.sex as 'M' | 'F' | 'OTHER',
+        sex: data.sex,
         cpf: data.cpf,
         educationalInstitution: data.educationalInstitution,
         areaOfInterest: data.areaOfInterest,
         yearOfEntry: data.yearOfEntry,
         expectedGraduationDate: data.expectedGraduationDate,
       },
-    });
+    };
+    console.log('internData:', internData);
+    onRegister(internData);
+  };
+
+  const onError = (errors: any) => {
+    console.log('Form errors:', errors);
   };
 
   return (
     <Card className="w-full flex">
       <CardContent className="flex-1 py-8">
-        <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
+        <form onSubmit={handleSubmit(onSubmit, onError)} className="space-y-6">
           {/* Personal Information */}
           <div className="space-y-4">
             <Label className="font-semibold">INFORMAÇÕES PESSOAIS</Label>
@@ -195,20 +204,22 @@ export default function InternRegisterForm({
               </div>
               <div className="space-y-2">
                 <Label htmlFor="sex">Sexo</Label>
-                <Select
-                  onValueChange={(value) =>
-                    setValue('sex', value as 'M' | 'F' | 'OTHER')
-                  }
-                >
-                  <SelectTrigger className="">
-                    <SelectValue placeholder="Selecione" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    <SelectItem value="M">Homem</SelectItem>
-                    <SelectItem value="F">Mulher</SelectItem>
-                    <SelectItem value="OTHER">Outro</SelectItem>
-                  </SelectContent>
-                </Select>
+                <Controller
+                  name="sex"
+                  control={control}
+                  render={({ field }) => (
+                    <Select onValueChange={field.onChange} value={field.value}>
+                      <SelectTrigger>
+                        <SelectValue placeholder="Selecione" />
+                      </SelectTrigger>
+                      <SelectContent>
+                        <SelectItem value="M">Homem</SelectItem>
+                        <SelectItem value="F">Mulher</SelectItem>
+                        <SelectItem value="OTHER">Outro</SelectItem>
+                      </SelectContent>
+                    </Select>
+                  )}
+                />
                 {errors.sex && (
                   <p className="text-red-500">{errors.sex.message}</p>
                 )}
@@ -286,7 +297,7 @@ export default function InternRegisterForm({
           {/* Address Section */}
           <div className="space-y-4">
             <Label className="font-semibold">ENDEREÇO</Label>
-            <div className="grid grid-cols-3 gap-4">
+            <div className="grid grid-cols-4 gap-4">
               <div className="space-y-2">
                 <Label htmlFor="street">Rua</Label>
                 <Input
@@ -321,6 +332,13 @@ export default function InternRegisterForm({
                 />
                 {errors.neighborhood && (
                   <p className="text-red-500">{errors.neighborhood.message}</p>
+                )}
+              </div>
+              <div className="space-y-2">
+                <Label htmlFor="cep">CEP</Label>
+                <Input id="cep" placeholder="45823030" {...register('cep')} />
+                {errors.cep && (
+                  <p className="text-red-500">{errors.cep.message}</p>
                 )}
               </div>
             </div>
@@ -431,6 +449,7 @@ export default function InternRegisterForm({
           <Button
             type="submit"
             className="w-full bg-[#FFA726] hover:bg-[#FF9800]"
+            disabled={Object.keys(errors).length > 0} // Desabilita se houver erros
           >
             Registrar
           </Button>
