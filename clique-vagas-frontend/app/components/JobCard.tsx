@@ -2,7 +2,9 @@
 
 import React, { useState, useEffect } from 'react';
 import styles from './JobCard.module.css';
+import SubscriptionsModal from './SubscriptionsModal';
 
+// Adicione estas novas props à interface
 interface JobCardProps {
     id: number;
     company: string;
@@ -21,6 +23,8 @@ interface JobCardProps {
     onDelete?: () => void;
     onSubscribe: () => void;
     children?: React.ReactNode;
+    onViewSubscriptions?: () => void;
+    companyEmail: string;
 }
 
 const JobCard: React.FC<JobCardProps> = ({
@@ -40,11 +44,16 @@ const JobCard: React.FC<JobCardProps> = ({
     onEdit,
     onDelete,
     onSubscribe,
-    children
+    children,
+    onViewSubscriptions,
+    companyEmail,
 }) => {
     const [liked, setLiked] = useState(false);
     const [likeCount, setLikeCount] = useState(0);
     const [isLoading, setIsLoading] = useState(false);
+    const [showSubscriptions, setShowSubscriptions] = useState(false);
+    const [isSubscribed, setIsSubscribed] = useState(false);
+    const [subscriptionLoading, setSubscriptionLoading] = useState(false);
 
     useEffect(() => {
         const fetchLikeData = async () => {
@@ -75,6 +84,30 @@ const JobCard: React.FC<JobCardProps> = ({
 
         fetchLikeData();
     }, [id, isAuthenticated]);
+
+    // Efeito para verificar inscrição
+    useEffect(() => {
+        const checkSubscription = async () => {
+            if (userRole === 'INTERN' && isAuthenticated) {
+                try {
+                    const response = await fetch(`http://localhost:8080/inscriptionJobPosting/intern/${id}`, {
+                        headers: {
+                            'Authorization': `Bearer ${localStorage.getItem('token')}`
+                        }
+                    });
+                    
+                    if (response.ok) {
+                        const isSubscribed = await response.json();
+                        setIsSubscribed(isSubscribed);
+                    }
+                } catch (error) {
+                    console.error('Erro ao verificar inscrição:', error);
+                }
+            }
+        };
+
+        checkSubscription();
+    }, [id, userRole, isAuthenticated]);
 
     const handleLike = async () => {
         if (!isAuthenticated) {
@@ -116,6 +149,39 @@ const JobCard: React.FC<JobCardProps> = ({
         }
     };
 
+    const handleSubscribe = async () => {
+        if (!isAuthenticated) {
+            window.location.href = '/login';
+            return;
+        }
+
+        setSubscriptionLoading(true);
+        try {
+            const url = `http://localhost:8080/inscriptionJobPosting/${id}`;
+            const method = isSubscribed ? 'DELETE' : 'POST';
+
+            const response = await fetch(url, {
+                method,
+                headers: {
+                    'Authorization': `Bearer ${localStorage.getItem('token')}`
+                }
+            });
+
+            if (response.ok) {
+                setIsSubscribed(!isSubscribed);
+                if (isSubscribed) {
+                    setLikeCount(prev => prev - 1);
+                } else {
+                    setLikeCount(prev => prev + 1);
+                }
+            }
+        } catch (error) {
+            console.error('Erro na inscrição:', error);
+        } finally {
+            setSubscriptionLoading(false);
+        }
+    };
+
     return (
         <div className={`${styles.card} ${isExpanded ? styles.expanded : styles.minimized}`}>
             <div className={styles['card-header']}>
@@ -151,11 +217,21 @@ const JobCard: React.FC<JobCardProps> = ({
                             <button className={styles.deleteButton} onClick={onDelete}>
                                 Excluir
                             </button>
+                            <button 
+                                className={styles.subscriptionsButton} 
+                                onClick={() => setShowSubscriptions(true)}
+                            >
+                                Ver Inscrições
+                            </button>
                         </>
                     )}
                     {isAuthenticated && userRole === 'INTERN' && (
-                        <button className={styles.inscreverButton} onClick={onSubscribe}>
-                            Inscrever-se
+                        <button 
+                            className={styles.inscreverButton} 
+                            onClick={handleSubscribe}
+                            disabled={subscriptionLoading}
+                        >
+                            {isSubscribed ? 'Remover Inscrição' : 'Inscrever-se'}
                         </button>
                     )}
                 </div>
@@ -173,6 +249,13 @@ const JobCard: React.FC<JobCardProps> = ({
                     </button>
                 </div>
             </div>
+
+            {showSubscriptions && (
+                <SubscriptionsModal 
+                    jobPostingId={id}
+                    onClose={() => setShowSubscriptions(false)}
+                />
+            )}
         </div>
     );
 };

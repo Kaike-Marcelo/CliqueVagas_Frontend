@@ -19,6 +19,7 @@ interface Job {
     applicationDeadline: string;
     publicationDate: string;
     updateAt: string;
+    companyEmail: string;
 }
 
 const VagasPage: React.FC = () => {
@@ -49,7 +50,7 @@ const VagasPage: React.FC = () => {
                     console.error('E-mail não encontrado');
                     return;
                 }
-
+    
                 const response = await fetch(`http://localhost:8080/job_posting/company/${email}`);
                 if (!response.ok) throw new Error('Erro na API');
                 
@@ -64,9 +65,10 @@ const VagasPage: React.FC = () => {
                     address: item.jobPost.address,
                     applicationDeadline: item.jobPost.applicationDeadline,
                     publicationDate: new Date().toISOString(),
-                    updateAt: new Date().toISOString()
+                    updateAt: new Date().toISOString(),
+                    companyEmail: email // propriedade adicionada
                 }));
-
+    
                 setJobs(formattedJobs);
             } else {
                 // Para usuários INTERN (ou outros) sem mock jobs, exibe mensagem de "sem postagens"
@@ -83,7 +85,8 @@ const VagasPage: React.FC = () => {
                 address: "Rua Principal, 123",
                 applicationDeadline: "2023-12-31T23:59:59Z",
                 publicationDate: "2023-01-01T00:00:00Z",
-                updateAt: "2023-01-02T00:00:00Z"
+                updateAt: "2023-01-02T00:00:00Z",
+                companyEmail: "company@example.com" // propriedade adicionada
             }]);
         }
     };
