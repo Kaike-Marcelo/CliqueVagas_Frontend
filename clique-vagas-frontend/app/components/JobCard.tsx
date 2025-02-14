@@ -90,7 +90,7 @@ const JobCard: React.FC<JobCardProps> = ({
         const checkSubscription = async () => {
             if (userRole === 'INTERN' && isAuthenticated) {
                 try {
-                    const response = await fetch(`http://localhost:8080/inscriptionJobPosting/intern/${id}`, {
+                    const response = await fetch(`http://localhost:8080/inscriptionJobPosting/intern/check/${id}`, {
                         headers: {
                             'Authorization': `Bearer ${localStorage.getItem('token')}`
                         }
