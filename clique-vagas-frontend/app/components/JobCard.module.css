@@ -11,13 +11,11 @@
 
 .card-container {
     width: 100%;
-    max-width: 600px;
+    max-width: 800px;
+    margin: 0 auto;
     display: flex;
     flex-direction: column;
     gap: 20px;
-    padding: 10px;
-    box-sizing: border-box;
-    margin: auto;
 }
 
 .card {
@@ -224,4 +222,19 @@
 .likeButton:disabled {
     opacity: 0.6;
     cursor: not-allowed;
+}
+
+/* JobCard.module.css (adição) */
+.subscriptionsButton {
+    background-color: #17a2b8;
+    color: white;
+    padding: 8px 12px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: background-color 0.2s;
+}
+
+.subscriptionsButton:hover {
+    background-color: #138496;
 }

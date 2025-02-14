@@ -17,8 +17,8 @@ const Header: React.FC = () => {
             </div>
             <div className={styles['header-right']}>
                 <a
-                    href="/"
-                    className={`${styles['nav-link']} ${isActive('/') ? styles.active : ''}`}
+                    href="/home"
+                    className={`${styles['nav-link']} ${isActive('/home') ? styles.active : ''}`}
                 >
                     <img src="/img/home.png" alt="Home" /> Início
                 </a>
