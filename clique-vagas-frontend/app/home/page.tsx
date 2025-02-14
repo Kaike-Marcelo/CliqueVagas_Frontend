@@ -159,7 +159,7 @@ const HomePage: React.FC = () => {
                         <div className={styles.noJobsMessage}>
                             {userRole === 'COMPANY' 
                                 ? "Nenhuma postagem. Que tal criar uma?" 
-                                : "Não por aqui. Se candidate em alguma vaga!"}
+                                : "Desculpe, não temos vagas disponíveis no momento."}
                         </div>
                     ) : (
                         jobs.map(job => {
@@ -171,11 +171,7 @@ const HomePage: React.FC = () => {
                                     isAuthenticated={userRole !== null}
                                     userRole={userRole}
                                     isExpanded={expandedCards[job.id] || false}
-                                    liked={false}
-                                    likeCount={0}
-                                    showEditForm={false}
                                     onToggle={() => handleToggleCard(job.id)}
-                                    onLike={() => {}}
                                     onEdit={isOwner ? () => setSelectedJob(job) : undefined}
                                     onDelete={isOwner ? () => handleDeleteJob(job.id) : undefined}
                                     onSubscribe={() => {}}

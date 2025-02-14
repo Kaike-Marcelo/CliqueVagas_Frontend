@@ -187,16 +187,10 @@ const VagasPage: React.FC = () => {
                             <JobCard
                                 key={job.id}
                                 {...job}
-                                isAuthenticated={true}
+                                isAuthenticated={userRole !== null}
                                 userRole={userRole}
                                 isExpanded={expandedCards[job.id] || false}
-                                liked={false}
-                                likeCount={0}
-                                showEditForm={false}
                                 onToggle={() => handleToggleCard(job.id)}
-                                onLike={() => {}}
-                                onEdit={() => setSelectedJob(job)}
-                                onDelete={() => handleDeleteJob(job.id)}
                                 onSubscribe={() => {}}
                             >
                                 {selectedJob?.id === job.id && (
