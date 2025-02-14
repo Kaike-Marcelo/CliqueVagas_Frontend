@@ -51,7 +51,11 @@ const VagasPage: React.FC = () => {
                     return;
                 }
     
-                const response = await fetch(`http://localhost:8080/job_posting/company/${email}`);
+                const response = await fetch(`http://localhost:8080/job_posting/company`, {
+                    headers: {
+                        "Authorization": `Bearer ${localStorage.getItem('token')}`
+                    }
+                });
                 if (!response.ok) throw new Error('Erro na API');
                 
                 const data = await response.json();
