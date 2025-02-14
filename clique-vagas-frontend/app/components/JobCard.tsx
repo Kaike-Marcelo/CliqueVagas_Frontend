@@ -21,8 +21,8 @@ interface JobCardProps {
     userRole?: string | null;
     onToggle: () => void;
     onLike: () => void;
-    onEdit: () => void;
-    onDelete: () => void;
+    onEdit?: () => void;
+    onDelete?: () => void;
     onSubscribe: () => void;
     children?: React.ReactNode;
 }
@@ -77,7 +77,7 @@ const JobCard: React.FC<JobCardProps> = ({
 
             <div className={styles['button-container']}>
                 <div className={styles.creatorButtons}>
-                    {isAuthenticated && userRole === 'COMPANY' && (
+                    {isAuthenticated && userRole === 'COMPANY' && onEdit && onDelete && (
                         <>
                             <button className={styles.editButton} onClick={onEdit}>
                                 Alterar
