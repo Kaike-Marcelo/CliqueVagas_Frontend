@@ -69,20 +69,8 @@ const VagasPage: React.FC = () => {
 
                 setJobs(formattedJobs);
             } else {
-                const mockData = [
-                    {
-                        id: 2,
-                        company: "Empresa Contratante",
-                        title: "Designer UI/UX",
-                        description: "Vaga para designer de interfaces...",
-                        jobPostingStatus: "Ativo",
-                        address: "Avenida Central, 456",
-                        applicationDeadline: "2023-11-30T23:59:59Z",
-                        publicationDate: "2023-02-01T00:00:00Z",
-                        updateAt: "2023-02-05T00:00:00Z"
-                    }
-                ];
-                setJobs(mockData);
+                // Para usuários INTERN (ou outros) sem mock jobs, exibe mensagem de "sem postagens"
+                setJobs([]);
             }
         } catch (error) {
             console.error('Erro ao buscar vagas:', error);
@@ -187,33 +175,41 @@ const VagasPage: React.FC = () => {
                             Adicionar Vaga
                         </button>
                     )}
-
-                    {jobs.map(job => (
-                        <JobCard
-                            key={job.id}
-                            {...job}
-                            isAuthenticated={true}
-                            userRole={userRole}
-                            isExpanded={expandedCards[job.id] || false}
-                            liked={false}
-                            likeCount={0}
-                            showEditForm={false}
-                            onToggle={() => handleToggleCard(job.id)}
-                            onLike={() => {}}
-                            onEdit={() => setSelectedJob(job)}
-                            onDelete={() => handleDeleteJob(job.id)}
-                            onSubscribe={() => {}}
-                        >
-                            {selectedJob?.id === job.id && (
-                                <JobForm
-                                    initialData={selectedJob}
-                                    onSubmit={handleEditJob}
-                                    onCancel={() => setSelectedJob(null)}
-                                />
-                            )}
-                        </JobCard>
-                    ))}
-
+    
+                    {jobs.length === 0 ? (
+                        <div className={styles.noJobsMessage}>
+                            {userRole === 'COMPANY' 
+                                ? "Nenhuma postagem. Que tal criar uma?" 
+                                : "Nada por aqui. Se candidate em alguma vaga!"}
+                        </div>
+                    ) : (
+                        jobs.map(job => (
+                            <JobCard
+                                key={job.id}
+                                {...job}
+                                isAuthenticated={true}
+                                userRole={userRole}
+                                isExpanded={expandedCards[job.id] || false}
+                                liked={false}
+                                likeCount={0}
+                                showEditForm={false}
+                                onToggle={() => handleToggleCard(job.id)}
+                                onLike={() => {}}
+                                onEdit={() => setSelectedJob(job)}
+                                onDelete={() => handleDeleteJob(job.id)}
+                                onSubscribe={() => {}}
+                            >
+                                {selectedJob?.id === job.id && (
+                                    <JobForm
+                                        initialData={selectedJob}
+                                        onSubmit={handleEditJob}
+                                        onCancel={() => setSelectedJob(null)}
+                                    />
+                                )}
+                            </JobCard>
+                        ))
+                    )}
+    
                     {showAddForm && (
                         <JobForm
                             onSubmit={handleAddJob}
@@ -222,7 +218,7 @@ const VagasPage: React.FC = () => {
                     )}
                 </div>
             </main>
-
+    
             <Footer />
         </div>
     );
