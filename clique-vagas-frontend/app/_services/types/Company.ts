@@ -2,7 +2,7 @@ import { User } from './User';
 
 export interface Company {
   id: number;
-  user: User; // Referência direta ao usuário
+  user: User;
   companyName: string;
   cnpj: string;
   telephoneResponsible: string;
