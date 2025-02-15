@@ -51,6 +51,14 @@ const PerfilPage = () => {
     setIsEditing(false);
   };
 
+  const handleAddSkill = (newSkill: SkillIntermediateWithIdDto) => {
+    setSkills((prevSkills) => [...prevSkills, newSkill]);
+  };
+
+  const handleDeleteSkill = (id: number) => {
+    setSkills((prevSkills) => prevSkills.filter((skill) => skill.id !== id));
+  };
+
   if (!userInfo) {
     return <p>Carregando...</p>;
   }
@@ -79,11 +87,15 @@ const PerfilPage = () => {
                     <h3 className="text-lg font-semibold mb-4">Skills</h3>
                     <div className="space-y-4 overflow-y-auto max-h-[400px]">
                       {skills.map((skill, index) => (
-                        <SkillCard key={index} skill={skill} />
+                        <SkillCard
+                          key={index}
+                          skill={skill}
+                          onDelete={handleDeleteSkill}
+                        />
                       ))}
                     </div>
                     <div className="mt-4 flex justify-center">
-                      <SkillCardForm />
+                      <SkillCardForm onSubmit={handleAddSkill} />
                     </div>
                   </div>
                 </div>

@@ -29,8 +29,11 @@ import {
 } from './ui/dialog';
 import { useState, useEffect } from 'react';
 import { getSkillsByType, addSkillIntern } from '@/app/_services/skillService';
-import { SkillModel, SkillIntermediateDto } from '@/app/_services/types/Skill';
-import { useRouter } from 'next/navigation';
+import {
+  SkillModel,
+  SkillIntermediateWithIdDto,
+  SkillIntermediateDto,
+} from '@/app/_services/types/Skill';
 
 const FormSchema = z.object({
   tipo: z.string().nonempty('Selecione um tipo.'),
@@ -38,7 +41,11 @@ const FormSchema = z.object({
   nivel: z.string().nonempty('Selecione um nível.'),
 });
 
-export function SkillCardForm() {
+interface SkillCardFormProps {
+  onSubmit: (data: SkillIntermediateWithIdDto) => void;
+}
+
+export function SkillCardForm({ onSubmit }: SkillCardFormProps) {
   const form = useForm({
     resolver: zodResolver(FormSchema),
     defaultValues: {
@@ -48,7 +55,6 @@ export function SkillCardForm() {
     },
   });
 
-  const router = useRouter();
   const [skills, setSkills] = useState<SkillModel[]>([]);
   const [levels] = useState([
     { value: 'BASIC', label: 'Básico' },
@@ -78,8 +84,16 @@ export function SkillCardForm() {
       return;
     }
 
-    const skill: SkillIntermediateDto = {
-      idSkill: parseInt(data.skill),
+    const selectedSkill = skills.find(
+      (skill) => skill.skillId === parseInt(data.skill)
+    );
+    if (!selectedSkill) {
+      console.error('Skill não encontrada');
+      return;
+    }
+
+    const skillDto: SkillIntermediateDto = {
+      idSkill: selectedSkill.skillId,
       proficiencyLevel: data.nivel as
         | 'BASIC'
         | 'INTERMEDIATE'
@@ -88,13 +102,25 @@ export function SkillCardForm() {
     };
 
     try {
-      const addedSkill = await addSkillIntern(skill, token);
+      const addedSkill = await addSkillIntern(skillDto, token);
       console.log('Skill adicionada:', addedSkill);
+
+      const skillWithId: SkillIntermediateWithIdDto = {
+        id: addedSkill,
+        idSkill: {
+          skillId: selectedSkill.skillId,
+          name: selectedSkill.name,
+          type: selectedSkill.type,
+        },
+        proficiencyLevel: skillDto.proficiencyLevel,
+      };
+
       form.reset();
       toggleDialog(false);
+      onSubmit(skillWithId); // Passando o objeto SkillIntermediateWithIdDto para a função onSubmit
     } catch (error) {
       console.error('Erro ao adicionar skill:', error);
-      console.error('Skill:', skill);
+      console.error('Skill:', skillDto);
     }
   };
 

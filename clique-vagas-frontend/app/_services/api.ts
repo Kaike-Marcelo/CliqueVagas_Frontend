@@ -15,5 +15,11 @@ export async function apiFetch<T>(
     throw new Error(`Erro ${response.status}: ${response.statusText}`);
   }
 
-  return response.json();
+  const contentType = response.headers.get('Content-Type');
+  if (contentType && contentType.includes('application/json')) {
+    return response.json();
+  }
+
+  // Se a resposta não for JSON, retornamos um valor vazio ou a própria resposta
+  return {} as T;
 }
