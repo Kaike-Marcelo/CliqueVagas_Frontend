@@ -32,7 +32,6 @@ export interface UpdateUserDto {
   role?: 'INTERN' | 'COMPANY';
   password?: string;
   description?: string;
-  enabled?: boolean;
 }
 
 export interface AuthenticationDto {

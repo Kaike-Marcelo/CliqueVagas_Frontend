@@ -23,42 +23,108 @@ import {
 } from './ui/dialog';
 import { useState } from 'react';
 import { EditIcon } from 'lucide-react';
+import { GetUserWithAddressDto, UpdateUserDto } from '../_services/types/User';
+import { PostInternDto } from '../_services/types/Intern';
+import { updateUser, putUserAddressById } from '../_services/userService';
+import { updateIntern } from '../_services/internService';
+import { Address } from '../_services/types/Address';
 
 const FormSchema = z.object({
-  nome: z.string().nonempty('Nome é obrigatório.'),
-  sobrenome: z.string().nonempty('Sobrenome é obrigatório.'),
+  firstName: z.string().nonempty('Nome é obrigatório.'),
+  lastName: z.string().nonempty('Sobrenome é obrigatório.'),
   cpf: z.string().nonempty('CPF é obrigatório.'),
-  telefone: z.string().nonempty('Telefone é obrigatório.'),
+  phone: z.string().nonempty('Telefone é obrigatório.'),
   email: z.string().nonempty('E-mail é obrigatório.').email('E-mail inválido.'),
-  rua: z.string().nonempty('Rua é obrigatória.'),
-  numero: z.string().nonempty('Número é obrigatório.'),
+  street: z.string().nonempty('Rua é obrigatória.'),
+  number: z.string().nonempty('Número é obrigatório.'),
   cep: z.string().nonempty('CEP é obrigatório.'),
-  bairro: z.string().nonempty('Bairro é obrigatório.'),
-  cidade: z.string().nonempty('Cidade é obrigatória.'),
-  estado: z.string().nonempty('Estado é obrigatório.'),
-  instituicao: z.string().nonempty('Instituição é obrigatória.'),
-  areaInteresse: z.string().nonempty('Área de interesse é obrigatória.'),
-  anoIngresso: z.string().nonempty('Ano de ingresso é obrigatório.'),
-  previsaoFormatura: z
+  neighborhood: z.string().nonempty('Bairro é obrigatório.'),
+  city: z.string().nonempty('Cidade é obrigatória.'),
+  state: z.string().nonempty('Estado é obrigatório.'),
+  educationalInstitution: z.string().nonempty('Instituição é obrigatória.'),
+  areaOfInterest: z.string().nonempty('Área de interesse é obrigatória.'),
+  yearOfEntry: z.string().nonempty('Ano de ingresso é obrigatório.'),
+  expectedGraduationDate: z
     .string()
     .nonempty('Previsão de formatura é obrigatória.'),
 });
 
 interface EditUserInfoProps {
-  userInfo: any;
-  onSave: (data: any) => void;
+  userInfo: GetUserWithAddressDto;
+  onSave: (data: GetUserWithAddressDto) => void;
 }
 
 export function EditUserInfo({ userInfo, onSave }: EditUserInfoProps) {
   const form = useForm({
     resolver: zodResolver(FormSchema),
-    defaultValues: userInfo,
+    defaultValues: {
+      ...userInfo.user,
+      ...userInfo.address,
+      ...userInfo.intern,
+    },
   });
 
-  function handleSubmit(data: any) {
-    onSave(data);
-    form.reset();
-    toggleDialog(false);
+  async function handleSubmit(data: any) {
+    const token = localStorage.getItem('token');
+    if (!token) {
+      console.error('Token não encontrado');
+      return;
+    }
+
+    const updatedUser: UpdateUserDto = {
+      firstName: data.firstName,
+      lastName: data.lastName,
+      phone: data.phone,
+      email: data.email,
+    };
+
+    const updatedAddress: Address = {
+      cep: data.cep,
+      street: data.street,
+      number: data.number,
+      neighborhood: data.neighborhood,
+      city: data.city,
+      state: data.state,
+      country: userInfo.address.country,
+    };
+
+    const updatedIntern: PostInternDto = {
+      cpf: data.cpf,
+      educationalInstitution: data.educationalInstitution,
+      areaOfInterest: data.areaOfInterest,
+      yearOfEntry: parseInt(data.yearOfEntry),
+      expectedGraduationDate: data.expectedGraduationDate,
+      dateOfBirth: userInfo.intern?.dateOfBirth || '',
+      sex: userInfo.intern?.sex || 'OTHER',
+    };
+
+    try {
+      await updateUser(updatedUser, token);
+      await putUserAddressById(userInfo.user.userId, updatedAddress);
+      await updateIntern(updatedIntern, token);
+
+      const updatedUserInfo: GetUserWithAddressDto = {
+        user: {
+          ...userInfo.user,
+          ...updatedUser,
+        },
+        address: {
+          ...userInfo.address,
+          ...updatedAddress,
+        },
+        intern: {
+          ...userInfo.intern,
+          ...updatedIntern,
+        },
+      };
+
+      onSave(updatedUserInfo);
+      form.reset();
+      toggleDialog(false);
+      console.log('Informações atualizadas com sucesso:', updatedUserInfo);
+    } catch (error) {
+      console.error('Erro ao atualizar informações:', error);
+    }
   }
 
   const [isDialogOpen, toggleDialog] = useState(false);
@@ -82,7 +148,7 @@ export function EditUserInfo({ userInfo, onSave }: EditUserInfoProps) {
           >
             <FormField
               control={form.control}
-              name="nome"
+              name="firstName"
               render={({ field }) => (
                 <FormItem>
                   <FormLabel>Nome</FormLabel>
@@ -95,7 +161,7 @@ export function EditUserInfo({ userInfo, onSave }: EditUserInfoProps) {
             />
             <FormField
               control={form.control}
-              name="sobrenome"
+              name="lastName"
               render={({ field }) => (
                 <FormItem>
                   <FormLabel>Sobrenome</FormLabel>
@@ -121,7 +187,7 @@ export function EditUserInfo({ userInfo, onSave }: EditUserInfoProps) {
             />
             <FormField
               control={form.control}
-              name="telefone"
+              name="phone"
               render={({ field }) => (
                 <FormItem>
                   <FormLabel>Telefone</FormLabel>
@@ -147,7 +213,7 @@ export function EditUserInfo({ userInfo, onSave }: EditUserInfoProps) {
             />
             <FormField
               control={form.control}
-              name="rua"
+              name="street"
               render={({ field }) => (
                 <FormItem>
                   <FormLabel>Rua</FormLabel>
@@ -160,7 +226,7 @@ export function EditUserInfo({ userInfo, onSave }: EditUserInfoProps) {
             />
             <FormField
               control={form.control}
-              name="numero"
+              name="number"
               render={({ field }) => (
                 <FormItem>
                   <FormLabel>Número</FormLabel>
@@ -186,7 +252,7 @@ export function EditUserInfo({ userInfo, onSave }: EditUserInfoProps) {
             />
             <FormField
               control={form.control}
-              name="bairro"
+              name="neighborhood"
               render={({ field }) => (
                 <FormItem>
                   <FormLabel>Bairro</FormLabel>
@@ -199,7 +265,7 @@ export function EditUserInfo({ userInfo, onSave }: EditUserInfoProps) {
             />
             <FormField
               control={form.control}
-              name="cidade"
+              name="city"
               render={({ field }) => (
                 <FormItem>
                   <FormLabel>Cidade</FormLabel>
@@ -212,7 +278,7 @@ export function EditUserInfo({ userInfo, onSave }: EditUserInfoProps) {
             />
             <FormField
               control={form.control}
-              name="estado"
+              name="state"
               render={({ field }) => (
                 <FormItem>
                   <FormLabel>Estado</FormLabel>
@@ -225,7 +291,7 @@ export function EditUserInfo({ userInfo, onSave }: EditUserInfoProps) {
             />
             <FormField
               control={form.control}
-              name="instituicao"
+              name="educationalInstitution"
               render={({ field }) => (
                 <FormItem>
                   <FormLabel>Instituição de Ensino</FormLabel>
@@ -238,7 +304,7 @@ export function EditUserInfo({ userInfo, onSave }: EditUserInfoProps) {
             />
             <FormField
               control={form.control}
-              name="areaInteresse"
+              name="areaOfInterest"
               render={({ field }) => (
                 <FormItem>
                   <FormLabel>Área de Interesse</FormLabel>
@@ -251,7 +317,7 @@ export function EditUserInfo({ userInfo, onSave }: EditUserInfoProps) {
             />
             <FormField
               control={form.control}
-              name="anoIngresso"
+              name="yearOfEntry"
               render={({ field }) => (
                 <FormItem>
                   <FormLabel>Ano de Ingresso</FormLabel>
@@ -264,12 +330,12 @@ export function EditUserInfo({ userInfo, onSave }: EditUserInfoProps) {
             />
             <FormField
               control={form.control}
-              name="previsaoFormatura"
+              name="expectedGraduationDate"
               render={({ field }) => (
                 <FormItem>
                   <FormLabel>Previsão de Formatura</FormLabel>
                   <FormControl>
-                    <Input {...field} placeholder="Previsão de Formatura" />
+                    <Input {...field} type="date" />
                   </FormControl>
                   <FormMessage />
                 </FormItem>

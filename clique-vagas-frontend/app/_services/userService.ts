@@ -1,4 +1,5 @@
 import { apiFetch } from './api';
+import { Address } from './types/Address';
 import {
   CreateUserDto,
   UpdateUserDto,
@@ -23,26 +24,14 @@ export async function getUserById(
   });
 }
 
-export async function createUser(
-  user: CreateUserDto,
-  token: string
-): Promise<number> {
-  return apiFetch<number>('/user', 'POST', {
-    headers: {
-      Authorization: `Bearer ${token}`,
-    },
-    body: JSON.stringify(user),
-  });
-}
-
 export async function updateUser(
-  id: number,
   user: UpdateUserDto,
   token: string
 ): Promise<void> {
-  await apiFetch<void>(`/user/${id}`, 'PUT', {
+  await apiFetch<void>(`/user`, 'PUT', {
     headers: {
       Authorization: `Bearer ${token}`,
+      'Content-Type': 'application/json',
     },
     body: JSON.stringify(user),
   });
@@ -81,12 +70,16 @@ export async function getUserProfile(
 }
 
 export async function getUserProfileByEmail(
-  email: string,
-  token: string
+  email: string
 ): Promise<GetUserWithAddressDto> {
-  return apiFetch<GetUserWithAddressDto>(`/profile/${email}`, 'GET', {
-    headers: {
-      Authorization: `Bearer ${token}`,
-    },
+  return apiFetch<GetUserWithAddressDto>(`/profile/${email}`, 'GET');
+}
+
+export async function putUserAddressById(
+  id: number,
+  address: Address
+): Promise<GetUserWithAddressDto> {
+  return apiFetch<GetUserWithAddressDto>(`/address/${id}`, 'PUT', {
+    body: JSON.stringify(address),
   });
 }

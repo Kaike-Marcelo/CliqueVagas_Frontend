@@ -18,11 +18,15 @@ export const createIntern = async (
 };
 
 export const updateIntern = async (
-  id: number,
-  intern: PostInternDto
+  intern: PostInternDto,
+  token: string
 ): Promise<void> => {
-  await apiFetch<void>(`/intern/${id}`, 'PUT', {
+  await apiFetch<void>(`/intern`, 'PUT', {
     body: JSON.stringify(intern),
+    headers: {
+      Authorization: `Bearer ${token}`,
+      'Content-Type': 'application/json',
+    },
   });
 };
 
