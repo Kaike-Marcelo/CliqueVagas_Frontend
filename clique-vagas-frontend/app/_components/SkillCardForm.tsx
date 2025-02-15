@@ -27,58 +27,76 @@ import {
   DialogTitle,
   DialogTrigger,
 } from './ui/dialog';
-import { useState } from 'react';
-
-const skills = [
-  { value: 'JavaScript', label: 'JavaScript' },
-  { value: 'TypeScript', label: 'TypeScript' },
-  { value: 'React', label: 'React' },
-];
-
-const levels = [
-  { value: 'Iniciante', label: 'Iniciante' },
-  { value: 'Intermediário', label: 'Intermediário' },
-  { value: 'Avançado', label: 'Avançado' },
-];
-
-const setors = [
-  { value: 'Development', label: 'Development' },
-  { value: 'Design', label: 'Design' },
-  { value: 'Marketing', label: 'Marketing' },
-];
-
-const types = [
-  { value: 'Soft Skill', label: 'Soft Skill' },
-  { value: 'Hard Skill', label: 'Hard Skill' },
-];
+import { useState, useEffect } from 'react';
+import { getSkillsByType, addSkillIntern } from '@/app/_services/skillService';
+import { SkillModel, SkillIntermediateDto } from '@/app/_services/types/Skill';
+import { useRouter } from 'next/navigation';
 
 const FormSchema = z.object({
-  setor: z.string().nonempty('Selecione um setor.'),
   tipo: z.string().nonempty('Selecione um tipo.'),
   skill: z.string().nonempty('Selecione uma habilidade.'),
   nivel: z.string().nonempty('Selecione um nível.'),
 });
 
-interface SkillCardFormProps {
-  onSubmit: (data: any) => void;
-}
-
-export function SkillCardForm({ onSubmit }: SkillCardFormProps) {
+export function SkillCardForm() {
   const form = useForm({
     resolver: zodResolver(FormSchema),
     defaultValues: {
-      setor: '',
       tipo: '',
       skill: '',
       nivel: '',
     },
   });
 
-  function handleSubmit(data: any) {
-    onSubmit(data);
-    form.reset();
-    toggleDialog(false);
-  }
+  const router = useRouter();
+  const [skills, setSkills] = useState<SkillModel[]>([]);
+  const [levels] = useState([
+    { value: 'BASIC', label: 'Básico' },
+    { value: 'INTERMEDIATE', label: 'Intermediário' },
+    { value: 'ADVANCED', label: 'Avançado' },
+    { value: 'EXPERT', label: 'Especialista' },
+  ]);
+
+  useEffect(() => {
+    const tipo = form.getValues('tipo');
+    if (tipo) fetchSkillsByType(tipo as 'HARD_SKILL' | 'SOFT_SKILL');
+  }, [form.getValues('tipo')]);
+
+  const fetchSkillsByType = async (type: 'HARD_SKILL' | 'SOFT_SKILL') => {
+    try {
+      const fetchedSkills = await getSkillsByType(type);
+      setSkills(fetchedSkills);
+    } catch (error) {
+      console.error('Erro ao buscar habilidades:', error);
+    }
+  };
+
+  const handleSubmit = async (data: any) => {
+    const token = localStorage.getItem('token');
+    if (!token) {
+      console.error('Token não encontrado');
+      return;
+    }
+
+    const skill: SkillIntermediateDto = {
+      idSkill: parseInt(data.skill),
+      proficiencyLevel: data.nivel as
+        | 'BASIC'
+        | 'INTERMEDIATE'
+        | 'ADVANCED'
+        | 'EXPERT',
+    };
+
+    try {
+      const addedSkill = await addSkillIntern(skill, token);
+      console.log('Skill adicionada:', addedSkill);
+      form.reset();
+      toggleDialog(false);
+    } catch (error) {
+      console.error('Erro ao adicionar skill:', error);
+      console.error('Skill:', skill);
+    }
+  };
 
   const [isDialogOpen, toggleDialog] = useState(false);
 
@@ -98,33 +116,6 @@ export function SkillCardForm({ onSubmit }: SkillCardFormProps) {
           >
             <FormField
               control={form.control}
-              name="setor"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Setor</FormLabel>
-                  <Select
-                    onValueChange={field.onChange}
-                    defaultValue={field.value}
-                  >
-                    <FormControl>
-                      <SelectTrigger>
-                        <SelectValue placeholder="Selecione um setor" />
-                      </SelectTrigger>
-                    </FormControl>
-                    <SelectContent>
-                      {setors.map((setor) => (
-                        <SelectItem key={setor.value} value={setor.value}>
-                          {setor.label}
-                        </SelectItem>
-                      ))}
-                    </SelectContent>
-                  </Select>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-            <FormField
-              control={form.control}
               name="tipo"
               render={({ field }) => (
                 <FormItem>
@@ -139,11 +130,8 @@ export function SkillCardForm({ onSubmit }: SkillCardFormProps) {
                       </SelectTrigger>
                     </FormControl>
                     <SelectContent>
-                      {types.map((type) => (
-                        <SelectItem key={type.value} value={type.value}>
-                          {type.label}
-                        </SelectItem>
-                      ))}
+                      <SelectItem value="HARD_SKILL">Hard Skill</SelectItem>
+                      <SelectItem value="SOFT_SKILL">Soft Skill</SelectItem>
                     </SelectContent>
                   </Select>
                   <FormMessage />
@@ -167,8 +155,11 @@ export function SkillCardForm({ onSubmit }: SkillCardFormProps) {
                     </FormControl>
                     <SelectContent>
                       {skills.map((skill) => (
-                        <SelectItem key={skill.value} value={skill.value}>
-                          {skill.label}
+                        <SelectItem
+                          key={skill.skillId}
+                          value={skill.skillId.toString()}
+                        >
+                          {skill.name}
                         </SelectItem>
                       ))}
                     </SelectContent>

@@ -15,38 +15,35 @@ import {
   AlertDialogTrigger,
 } from './ui/alert-dialog';
 import { CertificateForm } from './CertificadoForm';
-
-interface Certificado {
-  title: string;
-  image: string;
-}
+import { Certificate } from '../_services/types/Certificate';
 
 interface CertificadosProps {
-  certificados: Certificado[];
+  certificados: Certificate[];
+  setCertificados: React.Dispatch<React.SetStateAction<Certificate[]>>;
 }
 
-const Certificados: React.FC<CertificadosProps> = ({ certificados }) => {
+const Certificados: React.FC<CertificadosProps> = ({
+  certificados,
+  setCertificados,
+}) => {
   const [isDialogOpen, setIsDialogOpen] = useState(false);
 
   const handleOpenDialog = () => {
     setIsDialogOpen(true);
   };
 
-  function handleDeleteCertificado(index: number) {
-    certificados.splice(index, 1);
+  const handleDeleteCertificado = (index: number) => {
+    const updatedCertificados = certificados.filter((_, i) => i !== index);
+    setCertificados(updatedCertificados);
     setIsDialogOpen(false);
     setTimeout(() => setIsDialogOpen(true), 0);
-  }
+  };
 
-  function handleAddCertificado() {
-    certificados.push({
-      title: 'Certificado',
-      image:
-        'https://images.unsplash.com/photo-1523287562758-66c7fc58967f?w=500&auto=format&fit=crop&q=60&ixlib=rb-4.0.3',
-    });
+  const handleAddCertificado = (newCertificado: Certificate) => {
+    setCertificados([...certificados, newCertificado]);
     setIsDialogOpen(false);
     setTimeout(() => setIsDialogOpen(true), 0);
-  }
+  };
 
   return (
     <div>
@@ -65,15 +62,15 @@ const Certificados: React.FC<CertificadosProps> = ({ certificados }) => {
             <div key={index} className="group relative min-w-[150px]">
               <div className="aspect-square rounded-lg overflow-hidden">
                 <img
-                  src={cert.image}
-                  alt={cert.title}
+                  src={cert.file}
+                  alt={cert.name}
                   className="w-full h-full object-cover transition-transform group-hover:scale-110"
                 />
               </div>
               <div className="absolute inset-0 bg-black/60 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
                 <Award className="text-white h-8 w-8" />
               </div>
-              <p className="mt-2 text-center font-medium">{cert.title}</p>
+              <p className="mt-2 text-center font-medium">{cert.name}</p>
             </div>
           ))}
         </div>
@@ -90,12 +87,12 @@ const Certificados: React.FC<CertificadosProps> = ({ certificados }) => {
                 <div key={index} className="group relative min-w-[100px]">
                   <div className="aspect-square rounded-lg overflow-hidden">
                     <img
-                      src={cert.image}
-                      alt={cert.title}
+                      src={cert.file}
+                      alt={cert.name}
                       className="w-full h-full object-cover transition-transform group-hover:scale-110"
                     />
                   </div>
-                  <p className="mt-2 text-center font-medium">{cert.title}</p>
+                  <p className="mt-2 text-center font-medium">{cert.name}</p>
                   <AlertDialog>
                     <AlertDialogTrigger asChild>
                       <Badge

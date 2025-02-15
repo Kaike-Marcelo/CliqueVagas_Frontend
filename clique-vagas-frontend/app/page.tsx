@@ -12,9 +12,14 @@ export default function Home() {
   const [interns, setInterns] = useState<Intern[]>([]);
 
   useEffect(() => {
-    getUsers()
-      .then(setUsers)
-      .catch((err) => setError(err.message));
+    const token = localStorage.getItem('token');
+    if (token) {
+      getUsers()
+        .then(setUsers)
+        .catch((err) => setError(err.message));
+    } else {
+      setError('Token not found');
+    }
   }, []);
 
   useEffect(() => {

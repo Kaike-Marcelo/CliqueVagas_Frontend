@@ -1,37 +1,59 @@
 import { apiFetch } from './api';
 import {
-  User,
   CreateUserDto,
   UpdateUserDto,
   AuthenticationDto,
   LoginResponseDto,
+  GetUserWithAddressDto,
+  UserModel,
 } from './types/User';
 
-export async function getUsers(): Promise<User[]> {
-  return apiFetch<User[]>('/user/all');
+export async function getUsers(): Promise<UserModel[]> {
+  return apiFetch<UserModel[]>('/user/all', 'GET');
 }
 
-export async function getUserById(id: number): Promise<User> {
-  return apiFetch<User>(`/user/${id}`, 'GET');
+export async function getUserById(
+  id: number,
+  token: string
+): Promise<UserModel> {
+  return apiFetch<UserModel>(`/user/${id}`, 'GET', {
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  });
 }
 
-export async function createUser(user: CreateUserDto): Promise<number> {
+export async function createUser(
+  user: CreateUserDto,
+  token: string
+): Promise<number> {
   return apiFetch<number>('/user', 'POST', {
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
     body: JSON.stringify(user),
   });
 }
 
 export async function updateUser(
   id: number,
-  user: UpdateUserDto
+  user: UpdateUserDto,
+  token: string
 ): Promise<void> {
   await apiFetch<void>(`/user/${id}`, 'PUT', {
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
     body: JSON.stringify(user),
   });
 }
 
-export async function deleteUser(id: number): Promise<void> {
-  await apiFetch<void>(`/user/${id}`, 'DELETE');
+export async function deleteUser(id: number, token: string): Promise<void> {
+  await apiFetch<void>(`/user/${id}`, 'DELETE', {
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  });
 }
 
 export async function registerUser(user: CreateUserDto): Promise<void> {
@@ -48,6 +70,23 @@ export async function loginUser(
   });
 }
 
-export async function getUserProfile(id: number): Promise<User> {
-  return apiFetch<User>(`/profile/${id}`, 'GET');
+export async function getUserProfile(
+  token: string
+): Promise<GetUserWithAddressDto> {
+  return apiFetch<GetUserWithAddressDto>('/profile', 'GET', {
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  });
+}
+
+export async function getUserProfileByEmail(
+  email: string,
+  token: string
+): Promise<GetUserWithAddressDto> {
+  return apiFetch<GetUserWithAddressDto>(`/profile/${email}`, 'GET', {
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  });
 }
