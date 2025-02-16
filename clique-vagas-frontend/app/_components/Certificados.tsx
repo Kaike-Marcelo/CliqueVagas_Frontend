@@ -69,6 +69,7 @@ const Certificados = ({
     }
     try {
       const newId = await addCertificate(formData, token);
+      console.log('Id do novo certificado:', newId);
       const newCertificado: Certificate = {
         id: newId,
         name: formData.get('name') as string,
@@ -78,6 +79,7 @@ const Certificados = ({
         creditHours: parseInt(formData.get('creditHours') as string),
         file: formData.get('file') as any,
       };
+      console.log('Novo certificado:', newCertificado);
       onAdd(newCertificado);
       setIsDialogOpen(false);
       setTimeout(() => setIsDialogOpen(true), 0);
@@ -102,12 +104,6 @@ const Certificados = ({
     } catch (error) {
       console.error('Erro ao atualizar certificado:', error);
     }
-  };
-
-  const formatDate = (dateString: string | null) => {
-    if (!dateString) return 'Data não disponível';
-    const date = new Date(dateString);
-    return date.toLocaleDateString('pt-BR');
   };
 
   return (

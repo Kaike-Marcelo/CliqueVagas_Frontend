@@ -1,5 +1,5 @@
 import { apiFetch } from './api';
-import { Certificate, CertificateDto } from './types/Certificate';
+import { Certificate } from './types/Certificate';
 
 export async function getCertificates(token: string): Promise<Certificate[]> {
   return apiFetch<Certificate[]>('/certificates', 'GET', {
@@ -12,14 +12,14 @@ export async function getCertificates(token: string): Promise<Certificate[]> {
 export async function addCertificate(
   data: FormData,
   token: string
-): Promise<number> {
+): Promise<any> {
   const response = await apiFetch<{ id: number }>(`/certificates`, 'POST', {
     headers: {
       Authorization: `Bearer ${token}`,
     },
     body: data,
   });
-  return response.id;
+  return response;
 }
 
 export async function updateCertificate(
