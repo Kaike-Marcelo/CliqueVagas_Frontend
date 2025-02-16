@@ -1,3 +1,4 @@
+import { url } from 'inspector';
 import { apiFetch } from './api';
 import { Address } from './types/Address';
 import {
@@ -82,4 +83,46 @@ export async function putUserAddressById(
   return apiFetch<GetUserWithAddressDto>(`/address/${id}`, 'PUT', {
     body: JSON.stringify(address),
   });
+}
+
+export async function addPhotoUser(
+  photo: FormData,
+  token: string
+): Promise<any> {
+  const response = await apiFetch<{ path: string }>(`/user/photo`, 'POST', {
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+    body: photo,
+  });
+  console.log('response:', response);
+  return response.path;
+}
+
+export async function getPhotoProfile(token: string): Promise<string | null> {
+  try {
+    const response = await fetch('http://localhost:8080/user/photo', {
+      method: 'GET',
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    });
+
+    if (!response.ok) {
+      if (response.status === 400) {
+        return null;
+      }
+      const errorData = await response.json();
+      throw new Error(`Erro ${response.status}: ${errorData.message}`);
+    }
+
+    const blob = await response.blob();
+    const file = new File([blob], 'user-photo.png', { type: 'image/png' });
+    const url = URL.createObjectURL(file);
+    console.log('URL da foto:', url);
+    return url;
+  } catch (error) {
+    console.error('Erro ao obter foto do usuário:', (error as any).message);
+    return null;
+  }
 }

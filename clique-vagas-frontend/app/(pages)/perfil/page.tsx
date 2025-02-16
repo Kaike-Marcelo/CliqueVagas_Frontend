@@ -3,11 +3,6 @@
 import { useState, useEffect } from 'react';
 import { Download } from 'lucide-react';
 import { Card, CardContent } from '@/app/_components/ui/card';
-import {
-  Avatar,
-  AvatarFallback,
-  AvatarImage,
-} from '@/app/_components/ui/avatar';
 import { Button } from '@/app/_components/ui/button';
 import { Separator } from '@/app/_components/ui/separator';
 import Certificados from '@/app/_components/Certificados';
@@ -20,8 +15,11 @@ import { GetUserWithAddressDto } from '@/app/_services/types/User';
 import { SkillIntermediateWithIdDto } from '@/app/_services/types/Skill';
 import { Certificate } from '@/app/_services/types/Certificate';
 import CompanyInfo from '@/app/_components/CompanyInfo';
+import { useRouter } from 'next/navigation';
+import AvatarWithUpload from '@/app/_components/AvatarWithUpload';
 
 const PerfilPage = () => {
+  const router = useRouter();
   const [skills, setSkills] = useState<SkillIntermediateWithIdDto[]>([]);
   const [certificados, setCertificados] = useState<Certificate[]>([]);
   const [isEditing, setIsEditing] = useState(false);
@@ -89,6 +87,18 @@ const PerfilPage = () => {
     );
   };
 
+  const handleUploadSuccess = (url: string) => {
+    if (userInfo) {
+      setUserInfo({
+        ...userInfo,
+        user: {
+          ...userInfo.user,
+          urlImageProfile: url,
+        },
+      });
+    }
+  };
+
   if (!userInfo) {
     return <p>Carregando...</p>;
   }
@@ -102,10 +112,10 @@ const PerfilPage = () => {
               {/* Coluna Esquerda */}
               {userInfo.user.role === 'INTERN' && (
                 <div className="md:w-1/3 flex flex-col items-center gap-1">
-                  <Avatar className="w-32 h-32 mb-4">
-                    <AvatarImage src="https://www.intern-brazil.com.br/wp-content/uploads/2019/12/entendimento-perfil-480x480.png" />
-                    <AvatarFallback>AA</AvatarFallback>
-                  </Avatar>
+                  <AvatarWithUpload
+                    token={localStorage.getItem('token') || ''}
+                    onUploadSuccess={handleUploadSuccess}
+                  />
                   <EditUserInfo userInfo={userInfo} onSave={handleSave} />
                   <Button variant="default" className="w-full mb-8">
                     <Download className="mr-2 h-4 w-4" /> Currículo
@@ -133,10 +143,10 @@ const PerfilPage = () => {
 
               {userInfo.user.role === 'COMPANY' && (
                 <div className="md:w-1/3 flex flex-col items-center gap-3">
-                  <Avatar className="w-32 h-32 mb-4">
-                    <AvatarImage src="https://www.intern-brazil.com.br/wp-content/uploads/2019/12/entendimento-perfil-480x480.png" />
-                    <AvatarFallback>AA</AvatarFallback>
-                  </Avatar>
+                  <AvatarWithUpload
+                    token={localStorage.getItem('token') || ''}
+                    onUploadSuccess={handleUploadSuccess}
+                  />
                   <EditUserInfo userInfo={userInfo} onSave={handleSave} />
                   <Card className="w-full p-2">
                     <CardContent>
