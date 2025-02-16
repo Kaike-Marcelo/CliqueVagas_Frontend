@@ -79,6 +79,7 @@ export function EditUserInfo({ userInfo, onSave }: EditUserInfoProps) {
     };
 
     const updatedAddress: Address = {
+      id: userInfo.address.id,
       cep: data.cep,
       street: data.street,
       number: data.number,
@@ -100,7 +101,7 @@ export function EditUserInfo({ userInfo, onSave }: EditUserInfoProps) {
 
     try {
       await updateUser(updatedUser, token);
-      await putUserAddressById(userInfo.user.userId, updatedAddress);
+      await putUserAddressById(userInfo.address.id, updatedAddress);
       await updateIntern(updatedIntern, token);
 
       const updatedUserInfo: GetUserWithAddressDto = {
