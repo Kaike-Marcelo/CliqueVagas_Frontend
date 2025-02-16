@@ -33,3 +33,19 @@ export const updateIntern = async (
 export const deleteIntern = async (id: number): Promise<void> => {
   await apiFetch<void>(`/intern/${id}`, 'DELETE');
 };
+
+export async function getCurriculo(token: string): Promise<Blob> {
+  const response = await fetch('http://localhost:8080/resume/generate', {
+    method: 'GET',
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  });
+
+  if (!response.ok) {
+    const errorData = await response.json();
+    throw new Error(`Erro ${response.status}: ${errorData.message}`);
+  }
+
+  return await response.blob();
+}

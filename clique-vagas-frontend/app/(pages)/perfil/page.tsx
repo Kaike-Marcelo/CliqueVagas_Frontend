@@ -17,6 +17,7 @@ import { Certificate } from '@/app/_services/types/Certificate';
 import CompanyInfo from '@/app/_components/CompanyInfo';
 import { useRouter } from 'next/navigation';
 import AvatarWithUpload from '@/app/_components/AvatarWithUpload';
+import { getCurriculo } from '@/app/_services/internService';
 
 const PerfilPage = () => {
   const router = useRouter();
@@ -99,6 +100,22 @@ const PerfilPage = () => {
     }
   };
 
+  const handleDownloadCurriculo = async () => {
+    const token = localStorage.getItem('token');
+    if (!token) {
+      console.error('Token não encontrado');
+      return;
+    }
+
+    try {
+      const blob = await getCurriculo(token);
+      const url = window.URL.createObjectURL(blob);
+      window.open(url, '_blank');
+    } catch (error) {
+      console.error('Erro ao baixar currículo:', error);
+    }
+  };
+
   if (!userInfo) {
     return <p>Carregando...</p>;
   }
@@ -117,7 +134,11 @@ const PerfilPage = () => {
                     onUploadSuccess={handleUploadSuccess}
                   />
                   <EditUserInfo userInfo={userInfo} onSave={handleSave} />
-                  <Button variant="default" className="w-full mb-8">
+                  <Button
+                    variant="default"
+                    className="w-full mb-8"
+                    onClick={handleDownloadCurriculo}
+                  >
                     <Download className="mr-2 h-4 w-4" /> Currículo
                   </Button>
 
