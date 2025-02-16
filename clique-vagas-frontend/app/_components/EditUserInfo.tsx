@@ -28,6 +28,7 @@ import { PostInternDto } from '../_services/types/Intern';
 import { updateUser, putUserAddressById } from '../_services/userService';
 import { updateIntern } from '../_services/internService';
 import { Address } from '../_services/types/Address';
+import { Textarea } from './ui/textarea';
 
 const FormSchema = z.object({
   firstName: z.string().nonempty('Nome é obrigatório.'),
@@ -35,6 +36,7 @@ const FormSchema = z.object({
   cpf: z.string().nonempty('CPF é obrigatório.'),
   phone: z.string().nonempty('Telefone é obrigatório.'),
   email: z.string().nonempty('E-mail é obrigatório.').email('E-mail inválido.'),
+  description: z.string().nonempty('Objetivo é obrigatório.'),
   street: z.string().nonempty('Rua é obrigatória.'),
   number: z.string().nonempty('Número é obrigatório.'),
   cep: z.string().nonempty('CEP é obrigatório.'),
@@ -61,6 +63,7 @@ export function EditUserInfo({ userInfo, onSave }: EditUserInfoProps) {
       ...userInfo.user,
       ...userInfo.address,
       ...userInfo.intern,
+      description: userInfo.user.description || '',
     },
   });
 
@@ -76,6 +79,7 @@ export function EditUserInfo({ userInfo, onSave }: EditUserInfoProps) {
       lastName: data.lastName,
       phone: data.phone,
       email: data.email,
+      description: data.description,
     };
 
     const updatedAddress: Address = {
@@ -207,6 +211,19 @@ export function EditUserInfo({ userInfo, onSave }: EditUserInfoProps) {
                   <FormLabel>E-mail</FormLabel>
                   <FormControl>
                     <Input {...field} placeholder="E-mail" />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+            <FormField
+              control={form.control}
+              name="description"
+              render={({ field }) => (
+                <FormItem className="col-span-3">
+                  <FormLabel>Objetivo</FormLabel>
+                  <FormControl>
+                    <Textarea {...field} placeholder="Objetivo" />
                   </FormControl>
                   <FormMessage />
                 </FormItem>

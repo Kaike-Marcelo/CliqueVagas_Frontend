@@ -50,6 +50,10 @@ const InternInfo = ({ userInfo }: UserInfoProps) => {
             <label className="text-sm text-muted-foreground">E-mail</label>
             <p className="font-medium">{userInfo.user.email}</p>
           </div>
+          <div>
+            <label className="text-sm text-muted-foreground">Objetivo</label>
+            <p className="font-medium">{userInfo.user.description}</p>
+          </div>
         </div>
       </div>
 
