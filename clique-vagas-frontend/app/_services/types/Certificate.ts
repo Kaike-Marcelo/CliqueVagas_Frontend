@@ -5,5 +5,14 @@ export interface Certificate {
   institution: string;
   issuanceDate: string;
   creditHours: number;
-  file: string;
+  file: Blob | string;
+}
+
+export interface CertificateDto {
+  name: string;
+  description: string;
+  institution: string;
+  issuanceDate: string;
+  creditHours: number;
+  file: Blob | string;
 }

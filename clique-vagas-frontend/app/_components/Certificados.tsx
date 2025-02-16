@@ -1,7 +1,6 @@
 import React, { useState } from 'react';
 import { Award, Settings, Trash2 } from 'lucide-react';
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from './ui/dialog';
-import { Button } from './ui/button';
 import { Badge } from './ui/badge';
 import {
   AlertDialog,
@@ -16,33 +15,99 @@ import {
 } from './ui/alert-dialog';
 import { CertificateForm } from './CertificadoForm';
 import { Certificate } from '../_services/types/Certificate';
+import {
+  addCertificate,
+  deleteCertificate,
+  updateCertificate,
+} from '../_services/certificateService';
+import CertificateDetails from './CertificateDetails';
+import { Button } from './ui/button';
 
 interface CertificadosProps {
   certificados: Certificate[];
-  setCertificados: React.Dispatch<React.SetStateAction<Certificate[]>>;
+  onAdd: (certificate: Certificate) => Promise<void>;
+  onUpdate: (formData: FormData) => Promise<void>;
+  onDelete: (id: number) => Promise<void>;
 }
 
-const Certificados: React.FC<CertificadosProps> = ({
+const Certificados = ({
   certificados,
-  setCertificados,
-}) => {
+  onAdd,
+  onUpdate,
+  onDelete,
+}: CertificadosProps) => {
   const [isDialogOpen, setIsDialogOpen] = useState(false);
+  const [selectedCertificate, setSelectedCertificate] =
+    useState<Certificate | null>(null);
 
   const handleOpenDialog = () => {
     setIsDialogOpen(true);
   };
 
-  const handleDeleteCertificado = (index: number) => {
-    const updatedCertificados = certificados.filter((_, i) => i !== index);
-    setCertificados(updatedCertificados);
-    setIsDialogOpen(false);
-    setTimeout(() => setIsDialogOpen(true), 0);
+  const handleDeleteCertificado = async (id: number) => {
+    const token = localStorage.getItem('token');
+    if (!token) {
+      console.error('Token não encontrado');
+      return;
+    }
+    try {
+      const deletar = await deleteCertificate(id, token);
+      console.log('Certificado deletado:', deletar);
+      onDelete(id);
+      setIsDialogOpen(false);
+      setTimeout(() => setIsDialogOpen(true), 0);
+    } catch (error) {
+      console.error('Erro ao deletar certificado:', error);
+    }
   };
 
-  const handleAddCertificado = (newCertificado: Certificate) => {
-    setCertificados([...certificados, newCertificado]);
-    setIsDialogOpen(false);
-    setTimeout(() => setIsDialogOpen(true), 0);
+  const handleAddCertificado = async (formData: FormData) => {
+    const token = localStorage.getItem('token');
+    if (!token) {
+      console.error('Token não encontrado');
+      return;
+    }
+    try {
+      const newId = await addCertificate(formData, token);
+      const newCertificado: Certificate = {
+        id: newId,
+        name: formData.get('name') as string,
+        description: formData.get('description') as string,
+        institution: formData.get('institution') as string,
+        issuanceDate: formData.get('issuanceDate') as string,
+        creditHours: parseInt(formData.get('creditHours') as string),
+        file: formData.get('file') as any,
+      };
+      onAdd(newCertificado);
+      setIsDialogOpen(false);
+      setTimeout(() => setIsDialogOpen(true), 0);
+    } catch (error) {
+      console.error('Erro ao adicionar certificado:', error);
+    }
+  };
+
+  const handleUpdateCertificado = async (formData: FormData) => {
+    const token = localStorage.getItem('token');
+    if (!token) {
+      console.error('Token não encontrado');
+      return;
+    }
+
+    try {
+      await updateCertificate(formData, token);
+      onUpdate(formData);
+      setSelectedCertificate(null);
+      setIsDialogOpen(false);
+      setTimeout(() => setIsDialogOpen(true), 0);
+    } catch (error) {
+      console.error('Erro ao atualizar certificado:', error);
+    }
+  };
+
+  const formatDate = (dateString: string | null) => {
+    if (!dateString) return 'Data não disponível';
+    const date = new Date(dateString);
+    return date.toLocaleDateString('pt-BR');
   };
 
   return (
@@ -57,21 +122,39 @@ const Certificados: React.FC<CertificadosProps> = ({
         </button>
       </div>
       <div className="overflow-x-auto">
-        <div className="flex space-x-4">
+        <div className="flex space-x-4 max-h-[200px]">
           {certificados.map((cert, index) => (
-            <div key={index} className="group relative min-w-[150px]">
-              <div className="aspect-square rounded-lg overflow-hidden">
-                <img
-                  src={cert.file}
-                  alt={cert.name}
-                  className="w-full h-full object-cover transition-transform group-hover:scale-110"
-                />
-              </div>
-              <div className="absolute inset-0 bg-black/60 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
-                <Award className="text-white h-8 w-8" />
-              </div>
-              <p className="mt-2 text-center font-medium">{cert.name}</p>
-            </div>
+            <AlertDialog key={index}>
+              <AlertDialogTrigger asChild>
+                <div className="group relative max-w-[120px] cursor-pointer">
+                  <div className="aspect-square rounded-lg overflow-hidden min-h-[60%]">
+                    <img
+                      src="/img/certificado.svg"
+                      alt={cert.name}
+                      className="w-full h-full object-cover transition-transform group-hover:scale-110"
+                    />
+                  </div>
+                  <div className="absolute inset-0 bg-black/60 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
+                    <Award className="text-white h-8 w-8" />
+                  </div>
+                  <p className="mt-2 text-center font-medium">{cert.name}</p>
+                </div>
+              </AlertDialogTrigger>
+              <AlertDialogContent>
+                <AlertDialogHeader>
+                  <AlertDialogTitle>Detalhes do Certificado</AlertDialogTitle>
+                </AlertDialogHeader>
+                <AlertDialogDescription>
+                  Aqui estão os detalhes do certificado selecionado.
+                </AlertDialogDescription>
+                <CertificateDetails certificate={cert} />
+                <AlertDialogFooter>
+                  <AlertDialogCancel asChild>
+                    <Button variant="secondary">Fechar</Button>
+                  </AlertDialogCancel>
+                </AlertDialogFooter>
+              </AlertDialogContent>
+            </AlertDialog>
           ))}
         </div>
       </div>
@@ -87,9 +170,9 @@ const Certificados: React.FC<CertificadosProps> = ({
                 <div key={index} className="group relative min-w-[100px]">
                   <div className="aspect-square rounded-lg overflow-hidden">
                     <img
-                      src={cert.file}
+                      src="/img/certificado.svg"
                       alt={cert.name}
-                      className="w-full h-full object-cover transition-transform group-hover:scale-110"
+                      className="w-full h-full object-cover transition-transform group-hover:scale-100"
                     />
                   </div>
                   <p className="mt-2 text-center font-medium">{cert.name}</p>
@@ -114,7 +197,7 @@ const Certificados: React.FC<CertificadosProps> = ({
                       <AlertDialogFooter>
                         <AlertDialogCancel>Cancelar</AlertDialogCancel>
                         <AlertDialogAction
-                          onClick={() => handleDeleteCertificado(index)}
+                          onClick={() => handleDeleteCertificado(cert.id)}
                         >
                           Continuar
                         </AlertDialogAction>
@@ -126,7 +209,14 @@ const Certificados: React.FC<CertificadosProps> = ({
             </div>
           </div>
           <div className="mt-4 flex justify-center">
-            <CertificateForm onSubmit={handleAddCertificado} />
+            <CertificateForm
+              onSubmit={
+                selectedCertificate
+                  ? handleUpdateCertificado
+                  : handleAddCertificado
+              }
+              initialData={selectedCertificate}
+            />
           </div>
         </DialogContent>
       </Dialog>

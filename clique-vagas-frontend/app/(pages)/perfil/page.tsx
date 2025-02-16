@@ -59,6 +59,36 @@ const PerfilPage = () => {
     setSkills((prevSkills) => prevSkills.filter((skill) => skill.id !== id));
   };
 
+  const handleAddCertificado = async (newCertificado: Certificate) => {
+    setCertificados((prevCertificados) => [
+      ...prevCertificados,
+      newCertificado,
+    ]);
+  };
+
+  const handleUpdateCertificado = async (formData: FormData) => {
+    const updatedCertificado: Certificate = {
+      id: Number(formData.get('id')),
+      name: String(formData.get('name')),
+      description: String(formData.get('description')),
+      institution: String(formData.get('institution')),
+      issuanceDate: String(formData.get('date')),
+      creditHours: Number(formData.get('creditHours')),
+      file: String(formData.get('url')),
+    };
+    setCertificados((prevCertificados) =>
+      prevCertificados.map((cert) =>
+        cert.id === updatedCertificado.id ? updatedCertificado : cert
+      )
+    );
+  };
+
+  const handleDeleteCertificado = async (id: number): Promise<void> => {
+    setCertificados((prevCertificados) =>
+      prevCertificados.filter((cert) => cert.id !== id)
+    );
+  };
+
   if (!userInfo) {
     return <p>Carregando...</p>;
   }
@@ -130,8 +160,10 @@ const PerfilPage = () => {
                     {/* Certificados */}
                     <div className="mb-8">
                       <Certificados
-                        certificados={userInfo.certificates || []}
-                        setCertificados={setCertificados}
+                        certificados={certificados}
+                        onAdd={handleAddCertificado}
+                        onUpdate={handleUpdateCertificado}
+                        onDelete={handleDeleteCertificado}
                       />
                     </div>
 
