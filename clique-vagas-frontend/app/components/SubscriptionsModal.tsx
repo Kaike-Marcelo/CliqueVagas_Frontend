@@ -1,7 +1,16 @@
 'use client';
 
 import React, { useEffect, useState } from 'react';
-import styles from './SubscriptionsModal.module.css';
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogDescription,
+  DialogFooter,
+  DialogClose,
+} from '../_components/ui/dialog';
+import { Button } from '@/app/_components/ui/button';
 
 interface Subscription {
   id: number;
@@ -53,53 +62,60 @@ const SubscriptionsModal: React.FC<SubscriptionsModalProps> = ({
   }, [jobPostingId]);
 
   return (
-    <div className={styles.modalOverlay}>
-      <div className={styles.modalContent}>
-        <h2>Inscrições nesta Vaga</h2>
-        <button className={styles.closeButton} onClick={onClose}>
-          &times;
-        </button>
-
+    <Dialog open={true} onOpenChange={onClose}>
+      <DialogContent className="max-w-xl">
+        <DialogHeader>
+          <DialogTitle>Inscrições nesta Vaga</DialogTitle>
+          <DialogDescription>
+            Veja abaixo as inscrições para esta vaga.
+          </DialogDescription>
+        </DialogHeader>
         {loading ? (
-          <p>Carregando...</p>
+          <p className="text-center">Carregando...</p>
         ) : subscriptions.length === 0 ? (
-          <p>Nenhuma inscrição encontrada</p>
+          <p className="text-center">Nenhuma inscrição encontrada</p>
         ) : (
-          <div className={styles.subscriptionsList}>
+          <div className="space-y-4">
             {subscriptions.map((sub) => (
               <div
                 key={sub.id}
-                className={`${styles.subscriptionItem} ${sub.pontuation === 100 ? styles.highScore : ''}`}
+                className={`flex items-center justify-between p-4 border rounded-lg ${sub.pontuation === 100 ? 'bg-yellow-100 dark:bg-yellow-900' : 'bg-white dark:bg-gray-800'}`}
               >
-                <div className={styles.userInfo}>
+                <div className="flex items-center space-x-4">
                   <img
                     src={sub.user.fileProfile || '/img/default-profile.png'}
                     alt="Profile"
-                    className={styles.profileImage}
+                    className="w-16 h-16 rounded-full"
                   />
                   <div>
-                    <h3>
+                    <h3 className="text-lg font-semibold text-gray-900 dark:text-gray-100">
                       {sub.user.firstName} {sub.user.lastName}
                     </h3>
-                    <p>{sub.user.email}</p>
-                    <p>
+                    <p className="text-sm text-gray-600 dark:text-gray-400">
+                      {sub.user.email}
+                    </p>
+                    <p className="text-sm text-gray-600 dark:text-gray-400">
                       Inscrito em:{' '}
                       {new Date(sub.inscriptionDate).toLocaleDateString()}
                     </p>
                   </div>
                 </div>
-                <div className={styles.pontuation}>
-                  Pontuação: {sub.pontuation.toFixed(1)}
+                <div className="text-right">
+                  <p className="text-lg font-semibold text-gray-900 dark:text-gray-100">
+                    Pontuação: {sub.pontuation.toFixed(1)}
+                  </p>
                   {sub.pontuation === 100 && (
-                    <span className={styles.goldStar}>⭐</span>
+                    <span className="text-yellow-500 dark:text-yellow-300">
+                      ⭐
+                    </span>
                   )}
                 </div>
               </div>
             ))}
           </div>
         )}
-      </div>
-    </div>
+      </DialogContent>
+    </Dialog>
   );
 };
 

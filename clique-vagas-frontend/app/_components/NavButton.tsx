@@ -6,13 +6,14 @@ interface NavButtonProps {
   href: string;
   icon: JSX.Element;
   label: string;
+  isActive: boolean;
 }
 
-export function NavButton({ href, icon, label }: NavButtonProps) {
+export function NavButton({ href, icon, label, isActive }: NavButtonProps) {
   return (
     <Button
       variant="ghost"
-      className="flex flex-col items-center size-14"
+      className={`flex flex-col items-center size-14 ${isActive ? 'bg-gray-500' : ''}`}
       asChild
     >
       <Link href={href}>

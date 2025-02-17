@@ -1,4 +1,4 @@
-import { LoginForm } from '@/app/_components/auth/Login-form';
+import { LoginForm } from '@/app/_components/auth/login-form';
 import { Label } from '@/app/_components/ui/label';
 import { GalleryVerticalEnd, HomeIcon } from 'lucide-react';
 import Link from 'next/link';

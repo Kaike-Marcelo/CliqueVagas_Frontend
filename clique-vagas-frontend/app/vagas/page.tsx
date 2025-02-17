@@ -37,7 +37,7 @@ const VagasPage: React.FC = () => {
     const isAuthenticated = role !== null;
 
     if (!isAuthenticated) {
-      window.location.href = '/login';
+      window.location.href = '/auth/login';
       return;
     }
 

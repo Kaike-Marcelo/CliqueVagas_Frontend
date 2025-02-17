@@ -72,6 +72,8 @@ const Header: React.FC = () => {
     return () => clearTimeout(handler);
   }, [searchQuery, router, pathname]);
 
+  const isActive = (path: string) => pathname === path;
+
   if (
     pathname.startsWith('/auth/login') ||
     pathname.startsWith('/auth/register') ||
@@ -106,11 +108,13 @@ const Header: React.FC = () => {
                 href="/home"
                 icon={<HomeIcon size={24} />}
                 label="Início"
+                isActive={isActive('/home')}
               />
               <NavButton
                 href="/vagas"
                 icon={<BriefcaseIcon size={24} />}
                 label="Vagas"
+                isActive={isActive('/vagas')}
               />
               <UserMenu
                 handleLogout={handleLogout}
