@@ -41,9 +41,9 @@ export interface CreateCompanyDto {
 }
 
 export interface UpdateCompanyDto {
-  companyName?: string;
-  cnpj?: string;
-  telephoneResponsible?: string;
-  sectorOfOperation?: string;
-  websiteLink?: string;
+  companyName: string;
+  cnpj: string;
+  telephoneResponsible: string;
+  sectorOfOperation: string;
+  websiteLink: string;
 }

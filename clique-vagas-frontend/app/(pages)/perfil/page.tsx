@@ -18,6 +18,7 @@ import CompanyInfo from '@/app/_components/CompanyInfo';
 import { useRouter } from 'next/navigation';
 import AvatarWithUpload from '@/app/_components/AvatarWithUpload';
 import { getCurriculo } from '@/app/_services/internService';
+import { EditCompanyInfo } from '@/app/_components/EditCompanyInfo';
 
 const PerfilPage = () => {
   const router = useRouter();
@@ -168,7 +169,8 @@ const PerfilPage = () => {
                     token={localStorage.getItem('token') || ''}
                     onUploadSuccess={handleUploadSuccess}
                   />
-                  <EditUserInfo userInfo={userInfo} onSave={handleSave} />
+                  <EditCompanyInfo userInfo={userInfo} onSave={handleSave} />{' '}
+                  {/* Chamando o novo componente */}
                   <Card className="w-full p-2">
                     <CardContent>
                       <h3 className="text-lg font-semibold mb-4">Descrição</h3>
