@@ -1,13 +1,26 @@
-export interface Skill {
-    skillId: number;
-    name: string;
-    type: 'HARD_SKILL' | 'SOFT_SKILL';
-  }
-  
-  export interface SkillPosting {
-    id?: number;
-    idSkill: number;
-    proficiencyLevel: 'BASIC' | 'INTERMEDIATE' | 'ADVANCED' | 'EXPERT';
-    name: string; // For display purposes. Does not go into the JSON
-    type: 'HARD_SKILL' | 'SOFT_SKILL'; // Also for display purposes
-  }
+export enum SkillType {
+  HARD_SKILL = 'HARD_SKILL',
+  SOFT_SKILL = 'SOFT_SKILL',
+}
+
+export enum ProficiencyLevel {
+  BASIC = 'BASIC',
+  INTERMEDIATE = 'INTERMEDIATE',
+  ADVANCED = 'ADVANCED',
+  EXPERT = 'EXPERT',
+}
+
+export interface Skill { // Utilizar em formulários
+  skillId: number;
+  name: string;
+  type: SkillType;
+}
+
+export interface SkillPosting { // Utilizar em postagens de vagas
+  id?: number;
+  idSkill: number;
+  proficiencyLevel: ProficiencyLevel;
+  // Propriedades para exibição; não entram no JSON
+  name: string;
+  type: SkillType;
+}
