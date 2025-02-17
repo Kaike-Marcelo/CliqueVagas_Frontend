@@ -4,6 +4,8 @@ import { Inter } from 'next/font/google';
 import { ThemeProvider } from 'next-themes';
 import Header from '@/app/_components/Header';
 import { Metadata } from 'next';
+import { Toast } from '@radix-ui/react-toast';
+import { Toaster } from './_components/ui/toaster';
 
 const inter = Inter({ subsets: ['latin'] });
 
@@ -25,6 +27,7 @@ export default function RootLayout({
           <Header />
           {children}
         </ThemeProvider>
+        <Toaster />
       </body>
     </html>
   );

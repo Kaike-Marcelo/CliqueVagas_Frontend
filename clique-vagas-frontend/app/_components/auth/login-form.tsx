@@ -14,6 +14,7 @@ import {
 } from '@/app/_components/ui/alert';
 import { loginUser } from '@/app/_services/userService';
 import { AuthenticationDto } from '@/app/_services/types/User';
+import { ForgotPasswordDialog } from '@/app/_components/ForgotPasswordDialog';
 
 export function LoginForm({
   className,
@@ -84,12 +85,7 @@ export function LoginForm({
           <div className="grid gap-2">
             <div className="flex items-center">
               <Label htmlFor="password">Senha</Label>
-              <a
-                href="#"
-                className="ml-auto text-sm underline-offset-4 hover:underline"
-              >
-                Esqueceu sua senha?
-              </a>
+              <ForgotPasswordDialog />
             </div>
             <Input
               id="password"
