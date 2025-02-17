@@ -1,6 +1,7 @@
 "use client";
 
 import React, { useState, useEffect } from 'react';
+import { useSearchParams, useRouter } from 'next/navigation';
 import JobCard from '../components/JobCard';
 import JobForm from '../components/JobForm';
 import Header from '../components/Header';
@@ -30,19 +31,17 @@ const HomePage: React.FC = () => {
     const [expandedCards, setExpandedCards] = useState<{ [key: number]: boolean }>({});
     const [showAddForm, setShowAddForm] = useState(false);
 
-    useEffect(() => {
-        const role = getUserRole();
-        setUserRole(role);
-        if (role === 'COMPANY') {
-            const email = getUserEmail();
-            setUserEmail(email);
-        }
-        fetchJobs();
-    }, []);
+    const searchParams = useSearchParams();
+    const query = searchParams.get('q');
 
     const fetchJobs = async () => {
         try {
-            const response = await fetch('http://localhost:8080/job_posting/public');
+            let url = 'http://localhost:8080/job_posting/public';
+            if (query) {
+                url = `http://localhost:8080/job_posting/search?q=${encodeURIComponent(query)}`;
+            }
+            
+            const response = await fetch(url);
             if (!response.ok) throw new Error('Erro ao buscar vagas');
             
             const data = await response.json();
@@ -66,6 +65,16 @@ const HomePage: React.FC = () => {
             setJobs([]);
         }
     };
+
+    useEffect(() => {
+        const role = getUserRole();
+        setUserRole(role);
+        if (role === 'COMPANY') {
+            const email = getUserEmail();
+            setUserEmail(email);
+        }
+        fetchJobs();
+    }, [query]);
 
     const handleToggleCard = (jobId: number) => {
         setExpandedCards(prev => ({
