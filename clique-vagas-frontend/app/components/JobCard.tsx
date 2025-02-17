@@ -196,11 +196,6 @@ const JobCard: React.FC<JobCardProps> = ({
 
             if (response.ok) {
                 setIsSubscribed(!isSubscribed);
-                if (isSubscribed) {
-                    setLikeCount(prev => prev - 1);
-                } else {
-                    setLikeCount(prev => prev + 1);
-                }
             }
         } catch (error) {
             console.error('Erro na inscrição:', error);
