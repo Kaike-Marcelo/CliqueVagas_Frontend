@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useState, useCallback } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { usePathname, useRouter } from 'next/navigation';
 import Link from 'next/link';
 import Image from 'next/image';
@@ -10,11 +10,12 @@ import { ModeToggle } from '@/app/_components/ModeToggle';
 import { getUserRole, logoutUser } from '../_services/userService';
 import { NavButton } from './NavButton';
 import { UserMenu } from './UserMenu';
-import { SearchBar } from './SearchBar';
+import { Input } from './ui/input';
 
-export default function Header() {
+const Header: React.FC = () => {
   const pathname = usePathname();
   const router = useRouter();
+  const [searchQuery, setSearchQuery] = useState('');
   const [role, setRole] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState(true);
 
@@ -59,6 +60,18 @@ export default function Header() {
     }
   };
 
+  useEffect(() => {
+    const handler = setTimeout(() => {
+      if (searchQuery.trim()) {
+        router.push(`/home?q=${encodeURIComponent(searchQuery)}`);
+      } else if (pathname === '/home') {
+        router.push('/home');
+      }
+    }, 500);
+
+    return () => clearTimeout(handler);
+  }, [searchQuery, router, pathname]);
+
   if (
     pathname.startsWith('/auth/login') ||
     pathname.startsWith('/auth/register') ||
@@ -72,24 +85,30 @@ export default function Header() {
       <div className="max-w-6xl mx-auto flex justify-between w-full">
         <div className="flex items-center space-x-4">
           <Image
-            src="/img/logo.png"
-            alt="Logo"
+            src="/img/cliquevagas.png"
+            alt="Clique Vagas"
             width={40}
             height={40}
             priority
           />
-          <SearchBar />
+          <Input
+            type="text"
+            className="dark:bg-gray-800 text-white"
+            placeholder="Pesquisar..."
+            value={searchQuery}
+            onChange={(e) => setSearchQuery(e.target.value)}
+          />
         </div>
         <div className="flex items-center space-x-4">
           {role ? (
             <>
               <NavButton
-                href="/"
+                href="/home"
                 icon={<HomeIcon size={24} />}
                 label="Início"
               />
               <NavButton
-                href="/"
+                href="/vagas"
                 icon={<BriefcaseIcon size={24} />}
                 label="Vagas"
               />
@@ -112,4 +131,6 @@ export default function Header() {
       </div>
     </header>
   );
-}
+};
+
+export default Header;

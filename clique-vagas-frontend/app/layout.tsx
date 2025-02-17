@@ -6,6 +6,7 @@ import Header from '@/app/_components/Header';
 import { Metadata } from 'next';
 import { Toast } from '@radix-ui/react-toast';
 import { Toaster } from './_components/ui/toaster';
+import Footer from './components/Footer';
 
 const inter = Inter({ subsets: ['latin'] });
 
@@ -26,6 +27,7 @@ export default function RootLayout({
         <ThemeProvider attribute="class" defaultTheme="system">
           <Header />
           {children}
+          <Footer />
         </ThemeProvider>
         <Toaster />
       </body>

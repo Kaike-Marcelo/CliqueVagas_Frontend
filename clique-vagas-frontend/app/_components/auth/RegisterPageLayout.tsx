@@ -27,7 +27,7 @@ export default function RegisterPageLayout({
             className="max-h-full max-w-full object-contain"
           />
           <Link
-            href="/"
+            href="/home"
             className="absolute bottom-4 left-1/2 transform -translate-x-1/2"
           >
             <div className="flex items-center justify-center w-12 h-12 bg-slate-50 dark:bg-gray-700 rounded-full hover:bg-primary transition-colors duration-300">

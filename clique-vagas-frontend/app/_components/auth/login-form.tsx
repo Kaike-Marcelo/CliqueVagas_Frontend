@@ -41,7 +41,7 @@ export function LoginForm({
       localStorage.setItem('token', data.token);
 
       setIsPageLoading(true);
-      window.location.replace('/');
+      window.location.replace('/home');
     } catch (err) {
       console.error('Erro ao fazer login:', err);
       setError(
