@@ -61,14 +61,17 @@ const Header: React.FC = () => {
   };
 
   useEffect(() => {
+    // Atualiza a rota somente se já estivermos na página "/home"
+    if (pathname !== '/home') return;
+  
     const handler = setTimeout(() => {
       if (searchQuery.trim()) {
         router.push(`/home?q=${encodeURIComponent(searchQuery)}`);
-      } else if (pathname === '/home') {
+      } else {
         router.push('/home');
       }
     }, 500);
-
+  
     return () => clearTimeout(handler);
   }, [searchQuery, router, pathname]);
 
