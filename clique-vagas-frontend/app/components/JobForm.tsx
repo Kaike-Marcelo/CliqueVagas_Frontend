@@ -134,21 +134,34 @@ const JobForm: React.FC<JobFormProps> = ({ initialData, onSubmit, onCancel }) =>
     };
 
     const handleSkillsSubmit = async (jobId: number) => {
-        try {
-            // Delete all existing skills first
-            if (initialData?.skills?.length) {
-                await Promise.all(initialData.skills.map(async (skill) => {
-                    await fetch(`http://localhost:8080/skill_posting/${skill.id}`, {
-                        method: 'DELETE',
-                        headers: {
-                            'Authorization': `Bearer ${localStorage.getItem('token')}`
-                        }
-                    });
-                }));
-            }
+        // Pegando skills na API
+        const response = await fetch(`http://localhost:8080/skill_posting/${jobId}`);
+        const data = await response.json();
+        const initialSkills: SkillPosting[] = data.map((item: any) => ({
+            id: item.id,
+            idSkill: item.idSkill.skillId,
+            proficiencyLevel: item.proficiencyLevel as ProficiencyLevel,
+            name: item.idSkill.name,
+            type: item.idSkill.type as SkillType,
+        }));
 
-            // Add new skills
-            await Promise.all(formData.skills.map(async (skill) => {
+        // Pegando skills no formulário e comparando com as skills iniciais
+        const addedSkills = formData.skills.filter(skill => !initialSkills.some(s => s.idSkill === skill.idSkill));
+        const removedSkills = initialSkills.filter(skill => !formData.skills.some(s => s.idSkill === skill.idSkill));
+
+        try {
+            // Remover as skills que foram deletadas
+            await Promise.all(removedSkills.map(async (skill) => {
+                await fetch(`http://localhost:8080/skill_posting/${skill.id}`, {
+                    method: 'DELETE',
+                    headers: {
+                        'Authorization': `Bearer ${localStorage.getItem('token')}`
+                    }
+                });
+            }));
+
+            // Adicionar as novas skills
+            await Promise.all(addedSkills.map(async (skill) => {
                 await fetch('http://localhost:8080/skill_posting', {
                     method: 'POST',
                     headers: {
