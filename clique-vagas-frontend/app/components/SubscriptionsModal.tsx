@@ -83,7 +83,9 @@ const SubscriptionsModal: React.FC<SubscriptionsModalProps> = ({
               >
                 <div className="flex items-center space-x-4">
                   <img
-                    src={sub.user.fileProfile || '/img/default-profile.png'}
+                    src={sub.user.fileProfile
+                        ? `data:image/png;base64,${sub.user.fileProfile}`
+                        : '/img/default-profile.png'}
                     alt="Profile"
                     className="w-16 h-16 rounded-full"
                   />
