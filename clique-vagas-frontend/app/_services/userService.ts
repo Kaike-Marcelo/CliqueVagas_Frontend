@@ -1,4 +1,4 @@
-import { url } from 'inspector';
+import { jwtDecode } from 'jwt-decode';
 import { apiFetch } from './api';
 import { Address } from './types/Address';
 import {
@@ -123,6 +123,46 @@ export async function getPhotoProfile(token: string): Promise<string | null> {
     return url;
   } catch (error) {
     console.error('Erro ao obter foto do usuário:', (error as any).message);
+    return null;
+  }
+}
+
+export async function logoutUser(token: string): Promise<void> {
+  try {
+    await apiFetch<void>('/auth/logout', 'POST', {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    });
+  } catch (error) {
+    if (
+      error instanceof Error &&
+      error.message.includes(
+        'Cannot invoke "org.springframework.security.core.userdetails.UserDetails.getAuthorities()" because "user" is null'
+      )
+    ) {
+      console.error('Token inválido ou expirado. Redirecionando para login.');
+      window.location.href = '/auth/login';
+    } else {
+      console.error('Erro ao fazer logout:', error);
+    }
+  }
+}
+
+interface JwtPayload {
+  role: string;
+  [key: string]: any;
+}
+
+export function getUserRole(token: string): string | null {
+  if (!token) {
+    return null;
+  }
+  try {
+    const decoded = jwtDecode<JwtPayload>(token);
+    return decoded.role;
+  } catch (err) {
+    console.error('Could not decode token.', err);
     return null;
   }
 }
