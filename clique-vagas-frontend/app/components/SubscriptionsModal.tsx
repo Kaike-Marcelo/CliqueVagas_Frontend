@@ -72,11 +72,15 @@ const SubscriptionsModal: React.FC<SubscriptionsModalProps> = ({
                 className={`${styles.subscriptionItem} ${sub.pontuation === 100 ? styles.highScore : ''}`}
               >
                 <div className={styles.userInfo}>
-                  <img
-                    src={sub.user.fileProfile || '/img/default-profile.png'}
-                    alt="Profile"
-                    className={styles.profileImage}
-                  />
+                <img
+                src={
+                    sub.user.fileProfile
+                    ? `data:image/png;base64,${sub.user.fileProfile}`
+                    : '/img/default-profile.png'
+                }
+                alt="Profile"
+                className={styles.profileImage}
+                />
                   <div>
                     <h3>
                       {sub.user.firstName} {sub.user.lastName}
