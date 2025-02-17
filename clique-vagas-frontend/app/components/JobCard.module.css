@@ -1,0 +1,240 @@
+.body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: #f4f4f9;
+    height: 100vh;
+}
+
+.card-container {
+    width: 100%;
+    max-width: 800px;
+    margin: 0 auto;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+.card {
+    background-color: #fff;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    overflow: hidden;
+    transition: max-height 0.3s ease;
+}
+
+.card.minimized {
+    max-height: 150px;
+}
+
+.card.expanded {
+    max-height: 1000px;
+}
+
+.card-header {
+    padding: 16px 16px 0 16px;
+    display: flex;
+    flex-direction: column;
+    background-color: #f8f9fa;
+}
+
+.card-header-top {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: 100%;
+    gap: 10px;
+}
+
+.card-header h3 {
+    margin: 8px 0;
+    font-size: 18px;
+    font-weight: bold;
+}
+
+.company-info {
+    display: flex;
+    align-items: center;
+}
+
+.company-info img {
+    width: 24px;
+    height: 24px;
+    margin-right: 8px;
+}
+
+.status {
+    background-color: green;
+    color: white;
+    padding: 4px 8px;
+    border-radius: 4px;
+    opacity: 0.8;
+}
+
+.status.inactive {
+    background-color: red;
+}
+
+.card-body {
+    padding: 0 16px 16px 16px;
+    display: none;
+}
+
+.card.expanded .card-body {
+    display: block;
+}
+
+.button-container {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0 16px 16px 16px;
+    gap: 10px;
+}
+
+
+.button {
+    background-color: #007bff;
+    color: #fff;
+    border: none;
+    border-radius: 4px;
+    padding: 8px 12px;
+    cursor: pointer;
+    transition: background-color 0.2s ease;
+    order: 2; /* Garante que o Ver Mais fique à direita */
+}
+.button:hover {
+    background-color: #0056b3;
+}
+
+/* Novos estilos para like */
+.header-right {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.likeButton {
+    background: none;
+    border: 1px solid #ccc;
+    border-radius: 20px;
+    padding: 4px 12px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    transition: all 0.2s ease;
+    order: 1; /* Garante que o Like fique à esquerda */
+}
+
+.likeButton:hover {
+    background-color: #ffe6e6;
+}
+
+.likeButton.liked {
+    background-color: #ff4d4d;
+    border-color: #ff4d4d;
+    color: white;
+}
+
+.creatorButtons {
+    display: flex;
+    gap: 8px;
+}
+
+.editButton {
+    background-color: #ffc107;
+    color: black;
+    padding: 8px 12px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: background-color 0.2s;
+}
+
+.editButton:hover {
+    background-color: #e0a800;
+}
+
+.deleteButton {
+    background-color: #dc3545;
+    color: white;
+    padding: 8px 12px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: background-color 0.2s;
+}
+
+.deleteButton:hover {
+    background-color: #c82333;
+}
+
+.userButtons {
+    display: flex;
+    gap: 8px;
+    align-items: center;
+}
+
+.addButton {
+    background-color: #28a745;  /* Verde */
+    color: #fff;
+    border: none;
+    border-radius: 6px;
+    padding: 10px 16px;
+    font-size: 16px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: background-color 0.3s ease, transform 0.2s ease, box-shadow 0.2s ease;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.addButton:hover {
+    background-color: #218838;
+    transform: translateY(-2px);
+    box-shadow: 0 6px 8px rgba(0, 0, 0, 0.15);
+}
+
+.inscreverButton {
+    background-color: #007bff;  /* Azul */
+    color: #fff;
+    border: none;
+    border-radius: 6px;
+    padding: 10px 16px;
+    font-size: 16px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: background-color 0.3s ease, transform 0.2s ease, box-shadow 0.2s ease;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.inscreverButton:hover {
+    background-color: #0056b3;
+    transform: translateY(-2px);
+    box-shadow: 0 6px 8px rgba(0, 0, 0, 0.15);
+}
+
+.button:disabled,
+.likeButton:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+}
+
+/* JobCard.module.css (adição) */
+.subscriptionsButton {
+    background-color: #17a2b8;
+    color: white;
+    padding: 8px 12px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: background-color 0.2s;
+}
+
+.subscriptionsButton:hover {
+    background-color: #138496;
+}

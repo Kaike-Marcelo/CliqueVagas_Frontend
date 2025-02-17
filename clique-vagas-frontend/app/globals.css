@@ -3,6 +3,7 @@
 @tailwind utilities;
 
 @layer base {
+
   :root {
     --background: 0 0% 100%;
     --foreground: 20 14.3% 4.1%;
@@ -48,6 +49,7 @@
     --ring: 20.5 90.2% 48.2%;
   }
 }
+*/
 
 @layer base {
   * {
