@@ -116,3 +116,37 @@
 .inscreverButton:hover {
     background-color: #0056b3;
 }
+.skillSelector {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 0.5rem;
+    margin-bottom: 1rem;
+}
+
+.skillsList {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+}
+
+.skillTag {
+    background-color: #e3f2fd;
+    padding: 0.5rem 1rem;
+    border-radius: 20px;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.removeSkill {
+    background: none;
+    border: none;
+    color: #666;
+    cursor: pointer;
+    padding: 0;
+    margin-left: 0.5rem;
+}
+
+.removeSkill:hover {
+    color: #ff4444;
+}

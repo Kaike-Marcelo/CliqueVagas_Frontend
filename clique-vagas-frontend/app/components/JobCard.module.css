@@ -238,3 +238,24 @@
 .subscriptionsButton:hover {
     background-color: #138496;
 }
+
+.skillsSection {
+    margin-top: 1rem;
+    padding-top: 1rem;
+    border-top: 1px solid #eee;
+}
+
+.skillsList {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+    margin-top: 0.5rem;
+}
+
+.skillTag {
+    background-color: #f0f4f8;
+    padding: 0.25rem 0.75rem;
+    border-radius: 12px;
+    font-size: 0.9rem;
+    color: #2d3748;
+}
