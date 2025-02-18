@@ -131,8 +131,9 @@ const PerfilPage = () => {
               {userInfo.user.role === 'INTERN' && (
                 <div className="md:w-1/3 flex flex-col items-center gap-1">
                   <AvatarWithUpload
-                    token={localStorage.getItem('token') || ''}
+                    urlImageProfile={userInfo.user.urlImageProfile}
                     onUploadSuccess={handleUploadSuccess}
+                    isOwner={true}
                   />
                   <EditUserInfo userInfo={userInfo} onSave={handleSave} />
                   <Button
@@ -153,6 +154,7 @@ const PerfilPage = () => {
                           key={index}
                           skill={skill}
                           onDelete={handleDeleteSkill}
+                          isOwner={true}
                         />
                       ))}
                     </div>
@@ -166,8 +168,9 @@ const PerfilPage = () => {
               {userInfo.user.role === 'COMPANY' && (
                 <div className="md:w-1/3 flex flex-col items-center gap-3">
                   <AvatarWithUpload
-                    token={localStorage.getItem('token') || ''}
+                    urlImageProfile={userInfo.user.urlImageProfile}
                     onUploadSuccess={handleUploadSuccess}
+                    isOwner={true}
                   />
                   <EditCompanyInfo userInfo={userInfo} onSave={handleSave} />{' '}
                   {/* Chamando o novo componente */}
@@ -197,6 +200,7 @@ const PerfilPage = () => {
                         onAdd={handleAddCertificado}
                         onUpdate={handleUpdateCertificado}
                         onDelete={handleDeleteCertificado}
+                        isOwner={true}
                       />
                     </div>
 

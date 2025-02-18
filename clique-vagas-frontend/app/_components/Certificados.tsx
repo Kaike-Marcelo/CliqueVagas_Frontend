@@ -25,9 +25,10 @@ import { Button } from './ui/button';
 
 interface CertificadosProps {
   certificados: Certificate[];
-  onAdd: (certificate: Certificate) => Promise<void>;
-  onUpdate: (formData: FormData) => Promise<void>;
-  onDelete: (id: number) => Promise<void>;
+  onAdd?: (certificate: Certificate) => Promise<void>;
+  onUpdate?: (formData: FormData) => Promise<void>;
+  onDelete?: (id: number) => Promise<void>;
+  isOwner: boolean;
 }
 
 const Certificados = ({
@@ -35,6 +36,7 @@ const Certificados = ({
   onAdd,
   onUpdate,
   onDelete,
+  isOwner,
 }: CertificadosProps) => {
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   const [selectedCertificate, setSelectedCertificate] =
@@ -53,7 +55,7 @@ const Certificados = ({
     try {
       const deletar = await deleteCertificate(id, token);
       console.log('Certificado deletado:', deletar);
-      onDelete(id);
+      onDelete?.(id);
       setIsDialogOpen(false);
       setTimeout(() => setIsDialogOpen(true), 0);
     } catch (error) {
@@ -80,7 +82,7 @@ const Certificados = ({
         file: formData.get('file') as any,
       };
       console.log('Novo certificado:', newCertificado);
-      onAdd(newCertificado);
+      onAdd?.(newCertificado);
       setIsDialogOpen(false);
       setTimeout(() => setIsDialogOpen(true), 0);
     } catch (error) {
@@ -97,7 +99,7 @@ const Certificados = ({
 
     try {
       await updateCertificate(formData, token);
-      onUpdate(formData);
+      onUpdate?.(formData);
       setSelectedCertificate(null);
       setIsDialogOpen(false);
       setTimeout(() => setIsDialogOpen(true), 0);
@@ -110,12 +112,14 @@ const Certificados = ({
     <div>
       <div className="flex justify-between items-center mb-6">
         <h2 className="text-2xl font-bold">Certificados</h2>
-        <button
-          onClick={handleOpenDialog}
-          className="text-gray-500 hover:text-gray-700"
-        >
-          <Settings className="w-6 h-6" />
-        </button>
+        {isOwner && (
+          <button
+            onClick={handleOpenDialog}
+            className="text-gray-500 hover:text-gray-700"
+          >
+            <Settings className="w-6 h-6" />
+          </button>
+        )}
       </div>
       <div className="overflow-x-auto">
         <div className="flex space-x-4 max-h-[200px]">

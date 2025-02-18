@@ -1,14 +1,13 @@
 'use client';
 
 import React, { useEffect, useState } from 'react';
+import { useRouter } from 'next/navigation';
 import {
   Dialog,
   DialogContent,
   DialogHeader,
   DialogTitle,
   DialogDescription,
-  DialogFooter,
-  DialogClose,
 } from '../_components/ui/dialog';
 import { Button } from '@/app/_components/ui/button';
 
@@ -35,6 +34,7 @@ const SubscriptionsModal: React.FC<SubscriptionsModalProps> = ({
 }) => {
   const [subscriptions, setSubscriptions] = useState<Subscription[]>([]);
   const [loading, setLoading] = useState(true);
+  const router = useRouter();
 
   useEffect(() => {
     const fetchSubscriptions = async () => {
@@ -61,6 +61,10 @@ const SubscriptionsModal: React.FC<SubscriptionsModalProps> = ({
     fetchSubscriptions();
   }, [jobPostingId]);
 
+  const handleProfileClick = (email: string) => {
+    router.push(`/perfil/${email}`);
+  };
+
   return (
     <Dialog open={true} onOpenChange={onClose}>
       <DialogContent className="max-w-xl">
@@ -83,11 +87,14 @@ const SubscriptionsModal: React.FC<SubscriptionsModalProps> = ({
               >
                 <div className="flex items-center space-x-4">
                   <img
-                    src={sub.user.fileProfile
+                    src={
+                      sub.user.fileProfile
                         ? `data:image/png;base64,${sub.user.fileProfile}`
-                        : '/img/default-profile.png'}
+                        : '/img/default-profile.png'
+                    }
                     alt="Profile"
-                    className="w-16 h-16 rounded-full"
+                    className="w-16 h-16 rounded-full cursor-pointer"
+                    onClick={() => handleProfileClick(sub.user.email)}
                   />
                   <div>
                     <h3 className="text-lg font-semibold text-gray-900 dark:text-gray-100">

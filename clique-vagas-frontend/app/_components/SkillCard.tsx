@@ -18,17 +18,18 @@ import {
 
 interface SkillCardProps {
   skill: SkillIntermediateWithIdDto;
-  onDelete: (id: number) => void;
+  onDelete?: (id: number) => void;
+  isOwner: boolean;
 }
 
-const SkillCard = ({ skill, onDelete }: SkillCardProps) => {
+const SkillCard = ({ skill, onDelete, isOwner }: SkillCardProps) => {
   const [isDeleting, setIsDeleting] = useState(false);
 
   const handleDelete = async () => {
     setIsDeleting(true);
     try {
       await deleteSkillIntern(skill.id);
-      onDelete(skill.id);
+      onDelete?.(skill.id);
     } catch (error) {
       console.error('Erro ao deletar skill:', error);
     } finally {
@@ -53,19 +54,23 @@ const SkillCard = ({ skill, onDelete }: SkillCardProps) => {
           </CardContent>
         </Card>
       </AlertDialogTrigger>
-      <AlertDialogContent>
-        <AlertDialogHeader>
-          <AlertDialogTitle>Deseja Excluir?</AlertDialogTitle>
-          <AlertDialogDescription>
-            Esta ação não pode ser desfeita. Isso excluirá permanentemente a
-            skill.
-          </AlertDialogDescription>
-        </AlertDialogHeader>
-        <AlertDialogFooter>
-          <AlertDialogCancel>Cancelar</AlertDialogCancel>
-          <AlertDialogAction onClick={handleDelete}>Excluir</AlertDialogAction>
-        </AlertDialogFooter>
-      </AlertDialogContent>
+      {isOwner && (
+        <AlertDialogContent>
+          <AlertDialogHeader>
+            <AlertDialogTitle>Deseja Excluir?</AlertDialogTitle>
+            <AlertDialogDescription>
+              Esta ação não pode ser desfeita. Isso excluirá permanentemente a
+              skill.
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogCancel>Cancelar</AlertDialogCancel>
+            <AlertDialogAction onClick={handleDelete}>
+              Excluir
+            </AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      )}
     </AlertDialog>
   );
 };

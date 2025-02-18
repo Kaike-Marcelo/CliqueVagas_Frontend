@@ -17,31 +17,33 @@ const Header: React.FC = () => {
   const router = useRouter();
   const [searchQuery, setSearchQuery] = useState('');
   const [role, setRole] = useState<string | null>(null);
-  const [isLoading, setIsLoading] = useState(true);
 
   const fetchUserRole = useCallback(async () => {
     try {
       const token = localStorage.getItem('token');
       if (!token) {
         console.log('Token não encontrado');
+        return;
       }
 
-      const userRole = token ? await getUserRole(token) : null;
-      if (!userRole) console.log('Papel do usuário inválido');
+      const userRole = await getUserRole(token);
+      if (!userRole) {
+        console.log('Papel do usuário inválido');
+        return;
+      }
 
       setRole(userRole);
     } catch (error) {
       console.error('Erro ao obter papel do usuário:', error);
       setRole(null);
       router.push('/auth/login');
-    } finally {
-      setIsLoading(false);
-      router.refresh();
     }
   }, [router]);
 
   useEffect(() => {
-    fetchUserRole();
+    if (typeof window !== 'undefined') {
+      fetchUserRole();
+    }
   }, [fetchUserRole]);
 
   const handleLogout = async () => {
@@ -61,9 +63,8 @@ const Header: React.FC = () => {
   };
 
   useEffect(() => {
-    // Atualiza a rota somente se já estivermos na página "/home"
     if (pathname !== '/home') return;
-  
+
     const handler = setTimeout(() => {
       if (searchQuery.trim()) {
         router.push(`/home?q=${encodeURIComponent(searchQuery)}`);
@@ -71,7 +72,7 @@ const Header: React.FC = () => {
         router.push('/home');
       }
     }, 500);
-  
+
     return () => clearTimeout(handler);
   }, [searchQuery, router, pathname]);
 
@@ -79,8 +80,7 @@ const Header: React.FC = () => {
 
   if (
     pathname.startsWith('/auth/login') ||
-    pathname.startsWith('/auth/register') ||
-    isLoading
+    pathname.startsWith('/auth/register')
   ) {
     return null;
   }
