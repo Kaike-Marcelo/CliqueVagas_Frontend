@@ -4,6 +4,9 @@
 
 @layer base {
   :root {
+    --tag-bg: var(--primary);
+    --tag-color: 0 0 100;
+
     --background: 0 0% 100%;
     --foreground: 20 14.3% 4.1%;
     --card: 0 0% 100%;
@@ -27,6 +30,9 @@
   }
 
   .dark {
+    --tag-bg: 0deg 0% 10%;
+    --tag-color: 60deg 9.1% 97.8%;
+
     --background: 20 14.3% 4.1%;
     --foreground: 60 9.1% 97.8%;
     --card: 20 14.3% 4.1%;

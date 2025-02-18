@@ -5,7 +5,7 @@
     display: flex;
     justify-content: center;
     align-items: center;
-    background-color: #f4f4f9;
+    background-color: primary;
     height: 100vh;
 }
 
@@ -19,7 +19,7 @@
 }
 
 .card {
-    background-color: #fff;
+    background-color: secondary;
     border: 1px solid #ccc;
     border-radius: 8px;
     box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
@@ -39,7 +39,7 @@
     padding: 16px 16px 0 16px;
     display: flex;
     flex-direction: column;
-    background-color: #f8f9fa;
+    background-color: primary;
 }
 
 .card-header-top {
@@ -148,7 +148,7 @@
 
 .editButton {
     background-color: #ffc107;
-    color: black;
+    color: white;
     padding: 8px 12px;
     border: none;
     border-radius: 4px;
@@ -253,9 +253,9 @@
 }
 
 .skillTag {
-    background-color: #f0f4f8;
+    background-color: hsl(var(--tag-bg));
     padding: 0.25rem 0.75rem;
     border-radius: 12px;
     font-size: 0.9rem;
-    color: #2d3748;
+    color: hsl(var(--tag-color));
 }
