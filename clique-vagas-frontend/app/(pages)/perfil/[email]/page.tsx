@@ -41,7 +41,8 @@ const PerfilPage = () => {
   }, [email]);
 
   if (!userInfo) {
-    return <p>Carregando...</p>;
+    window.location.href = '/home';
+    return null;
   }
 
   return (
