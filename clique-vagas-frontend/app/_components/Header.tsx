@@ -80,7 +80,8 @@ const Header: React.FC = () => {
 
   if (
     pathname.startsWith('/auth/login') ||
-    pathname.startsWith('/auth/register')
+    pathname.startsWith('/auth/register') ||
+    pathname.startsWith('/reset-password')
   ) {
     return null;
   }

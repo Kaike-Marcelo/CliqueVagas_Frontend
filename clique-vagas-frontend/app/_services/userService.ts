@@ -166,3 +166,18 @@ export function getUserRole(token: string): string | null {
     return null;
   }
 }
+
+export function requestPasswordReset(email: string): Promise<void> {
+  return apiFetch<void>('/auth/request-password-reset', 'POST', {
+    body: JSON.stringify({ email }),
+  });
+}
+
+export function resetPassword(
+  token: string,
+  newPassword: string
+): Promise<void> {
+  return apiFetch<void>(`/auth/reset-password?token=${token}`, 'POST', {
+    body: JSON.stringify({ newPassword }),
+  });
+}
