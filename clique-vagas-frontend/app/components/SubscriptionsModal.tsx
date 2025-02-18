@@ -71,7 +71,7 @@ const SubscriptionsModal: React.FC<SubscriptionsModalProps> = ({
         <DialogHeader>
           <DialogTitle>Inscrições nesta Vaga</DialogTitle>
           <DialogDescription>
-            Veja abaixo as inscrições para esta vaga.
+            ⚠️ Clique na foto de perfil para ver mais detalhes do candidato
           </DialogDescription>
         </DialogHeader>
         {loading ? (
