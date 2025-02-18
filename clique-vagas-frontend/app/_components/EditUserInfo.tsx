@@ -142,7 +142,7 @@ export function EditUserInfo({ userInfo, onSave }: EditUserInfoProps) {
           Alterar Dados
         </Button>
       </DialogTrigger>
-      <DialogContent className="sm:max-w-[900px]">
+      <DialogContent className="sm:max-w-[900px] max-h-[80vh] overflow-y-auto">
         <DialogHeader>
           <DialogTitle>Alterar Informações Pessoais</DialogTitle>
         </DialogHeader>
@@ -220,7 +220,7 @@ export function EditUserInfo({ userInfo, onSave }: EditUserInfoProps) {
               control={form.control}
               name="description"
               render={({ field }) => (
-                <FormItem className="col-span-3">
+                <FormItem className="col-span-1 md:col-span-3">
                   <FormLabel>Objetivo</FormLabel>
                   <FormControl>
                     <Textarea {...field} placeholder="Objetivo" />
@@ -359,7 +359,7 @@ export function EditUserInfo({ userInfo, onSave }: EditUserInfoProps) {
                 </FormItem>
               )}
             />
-            <DialogFooter className="col-span-3">
+            <DialogFooter className="col-span-1 md:col-span-3">
               <Button type="submit">Salvar</Button>
             </DialogFooter>
           </form>
