@@ -106,7 +106,7 @@ const CompanyInfo: React.FC<CompanyInfoProps> = ({ userInfo }) => {
             </label>
             <p className="font-medium">{userInfo.company?.sectorOfOperation}</p>
           </div>
-          <div>
+          <div className="col-span-3">
             <label className="text-sm text-muted-foreground">
               Link do Website
             </label>
